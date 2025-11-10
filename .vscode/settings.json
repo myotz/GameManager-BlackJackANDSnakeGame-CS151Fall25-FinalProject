@@ -1,0 +1,18 @@
+{
+    "java.project.sourcePaths": [
+        "GameManager/src"
+    ],
+    "java.project.referencedLibraries": [
+        "GameManager/lib/javafx-swt.jar",
+        "GameManager/lib/javafx.base.jar",
+        "GameManager/lib/javafx.controls.jar",
+        "GameManager/lib/javafx.fxml.jar",
+        "GameManager/lib/javafx.graphics.jar",
+        "GameManager/lib/javafx.media.jar",
+        "GameManager/lib/javafx.swing.jar",
+        "GameManager/lib/javafx.web.jar",
+        "GameManager/lib/jdk.jsobject.jar",
+        "GameManager/lib/jfx.incubator.input.jar",
+        "GameManager/lib/jfx.incubator.richtext.jar"
+    ]
+}
