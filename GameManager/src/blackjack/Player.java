@@ -19,11 +19,11 @@ public class Player {
     }
 
     public int getValue(){
-
+        return 0;
     }
 
     public boolean isBust(){
-
+        return false;
     }
 
     public String getName(){
