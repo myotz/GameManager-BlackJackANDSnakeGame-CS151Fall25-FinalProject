@@ -1,11 +1,13 @@
-package blackjack;
-
+package blackjack.model;
+enum Rank {
+   TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
+}
 public class Card {
     private final String suit;
-    private final String rank;
+    private final Rank rank;
     private final int value;
 
-    public Card(String suit, String rank, int value) {
+    public Card(String suit, Rank rank, int value) {
         this.suit = suit;
         this.rank = rank;
         this.value = value;
@@ -15,7 +17,7 @@ public class Card {
         return suit;
     }
 
-    public String getRank() {
+    public Rank getRank() {
         return rank;
     }
 
