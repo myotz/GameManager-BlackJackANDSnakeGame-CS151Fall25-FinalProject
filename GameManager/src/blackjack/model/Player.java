@@ -4,26 +4,29 @@ public class Player {
     protected final String name;
     protected int money;
     protected int bet;
+    protected final Hand hand;
 
     public Player(String name, int initialMoney){
         this.name = name;
         this.money = initialMoney;
+        this.hand = new Hand();
     }
 
     public void add(Card card){
-
+        hand.add(card);
     }
 
     public void clear(){
-
+        hand.getCards().clear();
+        bet = 0;
     }
 
     public int getValue(){
-        return 0;
+        return hand.value();
     }
 
     public boolean isBust(){
-        return false;
+        return hand.isBust();
     }
 
     public String getName(){
@@ -31,13 +34,41 @@ public class Player {
     }
 
     public void playBet(int amount){
+        if (amount > money) {
+            throw new IllegalArgumentException("Bet exceeds available money");
+        }
         this.bet = amount;
         this.money -= amount;
     }
+
+    public int winBet(){
+        int winnings = bet * 2;
+        this.money += winnings;
+        this.bet = 0;
+        return winnings;
+    }
+
+    public int pushBet(){
+        this.money += bet;
+        this.bet = 0;
+        return bet;
+    }
+
+    public void loseBet(){
+        this.bet = 0;
+    }  
 
     public int getMoney(){
         return money;
     }
 
+    public Hand getHand(){
+        return hand;
+    }
+
+    @Override
+    public String toString(){
+        return name + " (Money: $" + money + ", Bet: $" + bet + ", Hand Value: " + hand.value() + ")";
+    }
 
 }
