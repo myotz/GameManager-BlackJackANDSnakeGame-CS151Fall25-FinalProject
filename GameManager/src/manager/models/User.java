@@ -6,36 +6,40 @@ public class User {
     private int blackjackHighScore;
     private int snakeHighScore;
     private String profileName;
+    private String securityQuestion;
 
-    //default constructor
+    // default constructor
     public User() {
         this.userName = null;
         this.password = null;
         this.blackjackHighScore = 0;
         this.snakeHighScore = 0;
         this.profileName = null;
+        this.securityQuestion = null;
     }
 
-    //constructor to load the users and game progress from the file
-    public User(String userName, String password, 
-                int blackjackHighScore, int snakeHighScore, String profileName) {
+    // constructor to load the users and game progress from the file
+    public User(String userName, String password,
+            int blackjackHighScore, int snakeHighScore, String profileName, String securityQuestion) {
         this.userName = userName;
         this.password = password;
         this.blackjackHighScore = blackjackHighScore;
         this.snakeHighScore = snakeHighScore;
-        this.profileName = profileName;          
+        this.profileName = profileName;
+        this.securityQuestion = securityQuestion;
     }
 
-    //constructor for account creation
-    public User(String userName, String password, String profileName) {
+    // constructor for account creation
+    public User(String userName, String password, String profileName, String securityQuestion) {
         this.userName = userName;
         this.password = password;
         this.blackjackHighScore = 0;
-        this.snakeHighScore = 0;;
-        this.profileName = profileName;      
+        this.snakeHighScore = 0;
+        this.profileName = profileName;
+        this.securityQuestion = securityQuestion;
     }
 
-    //Getters and Setters
+    // Getters and Setters
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -54,6 +58,14 @@ public class User {
 
     public void setSnakeHighScore(int highscore) {
         this.snakeHighScore = highscore;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityQuestion = securityAnswer;
+    }
+
+    public String getSecurityAnswer() {
+        return securityQuestion;
     }
 
     public String getUserName() {
@@ -76,10 +88,9 @@ public class User {
         return this.snakeHighScore;
     }
 
-    //Additional methods
+    // Additional methods
     @Override
     public String toString() {
         return null;
     }
-}   
-    
+}

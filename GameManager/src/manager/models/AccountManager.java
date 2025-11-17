@@ -16,7 +16,7 @@ public class AccountManager {
      */
     public void loadUsers() {
         File file = new File(FILEPATH);
-        System.out.println("Looking for file: " + new File(FILEPATH).getAbsolutePath());
+        //System.out.println("Looking for file: " + new File(FILEPATH).getAbsolutePath());
         if (!file.exists()) {
             System.out.println("File not found");
             return;
@@ -24,14 +24,16 @@ public class AccountManager {
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty())
+                    continue;
 
                 String[] parts = line.split(",");
-                if (parts.length == 3) {
+                if (parts.length == 4) {
                     String username = parts[0];
                     String password = parts[1];
                     String profile = parts[2];
-                    users.put(username, new User(username, password, profile));
+                    String securityQuestion = parts[3];
+                    users.put(username, new User(username, password, profile, securityQuestion));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -39,12 +41,12 @@ public class AccountManager {
         }
     }
 
-    public boolean createAccount(String userName, String password, String profileName) {
+    public boolean createAccount(String userName, String password, String profileName, String securityQuestion) {
         if (users.containsKey(userName)) {
             System.out.println("Account with this username already exists.");
             return false;
         }
-        User user = new User(userName, password, profileName);
+        User user = new User(userName, password, profileName, securityQuestion);
         users.put(userName, user);
         saveUsers();
         return true;
@@ -54,8 +56,7 @@ public class AccountManager {
         User user = users.get(userName);
         if (user != null && user.getPassword().equals(password)) {
             return user;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -79,12 +80,25 @@ public class AccountManager {
         }
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILEPATH))) {
             for (User user : users.values()) {
-                pw.println(user.getUserName() + "," + user.getPassword() + "," + user.getProfileName());
+                pw.println(user.getUserName() + "," + user.getPassword()
+                        + "," + user.getProfileName() + "," + user.getSecurityAnswer());
             }
-        } 
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean resetPassword(String username, String newPassword, String answer) {
+        User user = users.get(username);
+        if (user == null) {
+            return false;
+        }
+        if (!user.getSecurityAnswer().equalsIgnoreCase(answer.trim())) {
+            return false; // wrong answer
+        }
+        user.setPassword(newPassword);
+        saveUsers();
+        return true;
     }
 
 }
