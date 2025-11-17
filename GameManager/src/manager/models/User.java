@@ -6,25 +6,39 @@ public class User {
     private int blackjackHighScore;
     private int snakeHighScore;
     private String profileName;
+<<<<<<< HEAD
     private String securityQuestion;
 
     // default constructor
+=======
+
+    //default constructor
+>>>>>>> chan
     public User() {
         this.userName = null;
         this.password = null;
         this.blackjackHighScore = 0;
         this.snakeHighScore = 0;
         this.profileName = null;
+<<<<<<< HEAD
         this.securityQuestion = null;
     }
 
     // constructor to load the users and game progress from the file
     public User(String userName, String password,
             int blackjackHighScore, int snakeHighScore, String profileName, String securityQuestion) {
+=======
+    }
+
+    //constructor to load the users and game progress from the file
+    public User(String userName, String password, 
+                int blackjackHighScore, int snakeHighScore, String profileName) {
+>>>>>>> chan
         this.userName = userName;
         this.password = password;
         this.blackjackHighScore = blackjackHighScore;
         this.snakeHighScore = snakeHighScore;
+<<<<<<< HEAD
         this.profileName = profileName;
         this.securityQuestion = securityQuestion;
     }
@@ -40,6 +54,21 @@ public class User {
     }
 
     // Getters and Setters
+=======
+        this.profileName = profileName;          
+    }
+
+    //constructor for account creation
+    public User(String userName, String password, String profileName) {
+        this.userName = userName;
+        this.password = password;
+        this.blackjackHighScore = 0;
+        this.snakeHighScore = 0;;
+        this.profileName = profileName;      
+    }
+
+    //Getters and Setters
+>>>>>>> chan
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -60,6 +89,7 @@ public class User {
         this.snakeHighScore = highscore;
     }
 
+<<<<<<< HEAD
     public void setSecurityAnswer(String securityAnswer) {
         this.securityQuestion = securityAnswer;
     }
@@ -68,6 +98,8 @@ public class User {
         return securityQuestion;
     }
 
+=======
+>>>>>>> chan
     public String getUserName() {
         return this.userName;
     }
@@ -88,9 +120,18 @@ public class User {
         return this.snakeHighScore;
     }
 
+<<<<<<< HEAD
     // Additional methods
+=======
+    //Additional methods
+>>>>>>> chan
     @Override
     public String toString() {
         return null;
     }
+<<<<<<< HEAD
 }
+=======
+}   
+    
+>>>>>>> chan

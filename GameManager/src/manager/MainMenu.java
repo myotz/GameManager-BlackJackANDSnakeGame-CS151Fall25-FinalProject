@@ -15,10 +15,16 @@ public class MainMenu {
     private final HBox hbox;
 
     public MainMenu(GameManager gameManager, HighScoreManager highScoreManager, User curUser) {
+<<<<<<< HEAD
         hbox = new HBox(80);
         hbox.setPadding(new Insets(20));
         hbox.setAlignment(Pos.CENTER);
         hbox.setStyle("-fx-background-color: #bad137e7;");
+=======
+        hbox = new HBox(50);
+        hbox.setPadding(new Insets(20));
+        hbox.setAlignment(Pos.CENTER);
+>>>>>>> chan
 
         VBox scoresBox = new VBox(20);
         scoresBox.setAlignment(Pos.TOP_LEFT);

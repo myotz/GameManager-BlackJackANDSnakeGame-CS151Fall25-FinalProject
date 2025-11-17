@@ -28,14 +28,23 @@ public class HighScoreManager {
                     String userName = parts[0];
                     int blackjack = Integer.parseInt(parts[1]);
                     int snakeGame = Integer.parseInt(parts[2]);
+<<<<<<< HEAD
                     highScores.put(userName, new int[] { blackjack, snakeGame });
                 }
             }
         } catch (FileNotFoundException e) {
+=======
+                    highScores.put(userName, new int[]{blackjack,snakeGame});
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+>>>>>>> chan
             e.printStackTrace();
         }
     }
 
+<<<<<<< HEAD
     public void updateScore(String username, Integer blackjackScore, Integer snakeScore) {
         int[] current = highScores.getOrDefault(username, new int[] { 0, 0 });
 
@@ -48,6 +57,10 @@ public class HighScoreManager {
                 : current[1];
 
         highScores.put(username, new int[] { newBlackjack, newSnake });
+=======
+    public void updateScore(String username, int blackjackScore, int snakeScore) {
+        highScores.put(username, new int[]{blackjackScore, snakeScore});
+>>>>>>> chan
         saveScores();
     }
 
@@ -62,7 +75,12 @@ public class HighScoreManager {
                 int[] scores = map.getValue();
                 pw.println(userName + "," + scores[0] + "," + scores[1]);
             }
+<<<<<<< HEAD
         } catch (IOException e) {
+=======
+        } 
+        catch (IOException e) {
+>>>>>>> chan
             e.printStackTrace();
         }
     }
@@ -88,6 +106,7 @@ public class HighScoreManager {
     public Map<String, int[]> getAllScores() {
         return highScores;
     }
+<<<<<<< HEAD
 
     public int getBlackjackScore(String username) {
         int[] scores = highScores.getOrDefault(username, new int[] { 0, 0 });
@@ -99,4 +118,6 @@ public class HighScoreManager {
         return scores[1];
     }
 
+=======
+>>>>>>> chan
 }
