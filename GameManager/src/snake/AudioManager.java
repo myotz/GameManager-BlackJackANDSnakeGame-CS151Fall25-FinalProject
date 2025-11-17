@@ -46,7 +46,8 @@ public class AudioManager {
 
     private void playOnce(MediaPlayer p) {
         if (p == null) return;
-        p.stop();
-        p.play();
+        p.stop();          
+        p.play();          
     }
 }
+
