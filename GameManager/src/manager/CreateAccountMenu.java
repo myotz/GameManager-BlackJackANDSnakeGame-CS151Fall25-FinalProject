@@ -16,23 +16,14 @@ public class CreateAccountMenu {
 
     public CreateAccountMenu(AccountManager accountManager, Label messageLabel) {
         window = new Stage();
-<<<<<<< HEAD
         window.initModality(Modality.APPLICATION_MODAL);
-=======
-        window.initModality(Modality.APPLICATION_MODAL); 
->>>>>>> chan
         window.setTitle("Create New Account");
 
         layout = new VBox(15);
         layout.setAlignment(Pos.CENTER);
-<<<<<<< HEAD
         layout.setFillWidth(false);
         //layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: #1fcfa6e7;");
-=======
-        layout.setFillWidth(false); 
-        layout.setPadding(new Insets(20));
->>>>>>> chan
 
         Label title = new Label("Create a New Account");
         title.setFont(Font.font(18));
@@ -49,44 +40,32 @@ public class CreateAccountMenu {
         profileField.setPromptText("Profile Name");
         profileField.setPrefWidth(200);
 
-<<<<<<< HEAD
         TextField securityQuestionField = new TextField();
         securityQuestionField.setPromptText("First name of your first love");
         securityQuestionField.setPrefWidth(200);
 
-=======
->>>>>>> chan
         Button createBtn = new Button("Create");
         Button cancelBtn = new Button("Cancel");
 
         HBox buttonBox = new HBox(10, createBtn, cancelBtn);
         buttonBox.setAlignment(Pos.CENTER);
 
-<<<<<<< HEAD
         Label text = new Label();
         text.setFont(Font.font(18));
 
-=======
->>>>>>> chan
         layout.getChildren().addAll(
                 title,
                 usernameField,
                 passwordField,
                 profileField,
-<<<<<<< HEAD
                 securityQuestionField,
                 buttonBox,
                 text);
-=======
-                buttonBox
-        );
->>>>>>> chan
 
         createBtn.setOnAction(e -> {
             String username = usernameField.getText().trim();
             String password = passwordField.getText().trim();
             String profile = profileField.getText().trim();
-<<<<<<< HEAD
             String securityQuestion = securityQuestionField.getText().trim();
 
             if (username.isEmpty() || password.isEmpty() || profile.isEmpty() || securityQuestion.isEmpty()) {
@@ -96,15 +75,6 @@ public class CreateAccountMenu {
             }
 
             boolean created = accountManager.createAccount(username, password, profile, securityQuestion);
-=======
-
-            if (username.isEmpty() || password.isEmpty() || profile.isEmpty()) {
-                messageLabel.setText("All fields are required.");
-                return;
-            }
-
-            boolean created = accountManager.createAccount(username, password, profile);
->>>>>>> chan
             if (created) {
                 messageLabel.setText("Account created for " + profile + "! You can now log in.");
                 window.close();

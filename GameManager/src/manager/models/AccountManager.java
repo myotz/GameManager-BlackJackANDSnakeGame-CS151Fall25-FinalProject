@@ -16,11 +16,7 @@ public class AccountManager {
      */
     public void loadUsers() {
         File file = new File(FILEPATH);
-<<<<<<< HEAD
         //System.out.println("Looking for file: " + new File(FILEPATH).getAbsolutePath());
-=======
-        System.out.println("Looking for file: " + new File(FILEPATH).getAbsolutePath());
->>>>>>> chan
         if (!file.exists()) {
             System.out.println("File not found");
             return;
@@ -28,7 +24,6 @@ public class AccountManager {
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-<<<<<<< HEAD
                 if (line.isEmpty())
                     continue;
 
@@ -39,16 +34,6 @@ public class AccountManager {
                     String profile = parts[2];
                     String securityQuestion = parts[3];
                     users.put(username, new User(username, password, profile, securityQuestion));
-=======
-                if (line.isEmpty()) continue;
-
-                String[] parts = line.split(",");
-                if (parts.length == 3) {
-                    String username = parts[0];
-                    String password = parts[1];
-                    String profile = parts[2];
-                    users.put(username, new User(username, password, profile));
->>>>>>> chan
                 }
             }
         } catch (FileNotFoundException e) {
@@ -56,20 +41,12 @@ public class AccountManager {
         }
     }
 
-<<<<<<< HEAD
     public boolean createAccount(String userName, String password, String profileName, String securityQuestion) {
-=======
-    public boolean createAccount(String userName, String password, String profileName) {
->>>>>>> chan
         if (users.containsKey(userName)) {
             System.out.println("Account with this username already exists.");
             return false;
         }
-<<<<<<< HEAD
         User user = new User(userName, password, profileName, securityQuestion);
-=======
-        User user = new User(userName, password, profileName);
->>>>>>> chan
         users.put(userName, user);
         saveUsers();
         return true;
@@ -79,12 +56,7 @@ public class AccountManager {
         User user = users.get(userName);
         if (user != null && user.getPassword().equals(password)) {
             return user;
-<<<<<<< HEAD
         } else {
-=======
-        }
-        else {
->>>>>>> chan
             return null;
         }
     }
@@ -108,22 +80,14 @@ public class AccountManager {
         }
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILEPATH))) {
             for (User user : users.values()) {
-<<<<<<< HEAD
                 pw.println(user.getUserName() + "," + user.getPassword()
                         + "," + user.getProfileName() + "," + user.getSecurityAnswer());
             }
         } catch (IOException e) {
-=======
-                pw.println(user.getUserName() + "," + user.getPassword() + "," + user.getProfileName());
-            }
-        } 
-        catch (IOException e) {
->>>>>>> chan
             e.printStackTrace();
         }
     }
 
-<<<<<<< HEAD
     public boolean resetPassword(String username, String newPassword, String answer) {
         User user = users.get(username);
         if (user == null) {
@@ -137,6 +101,4 @@ public class AccountManager {
         return true;
     }
 
-=======
->>>>>>> chan
 }
