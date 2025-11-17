@@ -47,7 +47,7 @@ public class SnakeUI extends BorderPane {
         audio.playBackground();
 
         try {
-            backgroundImage = new Image(getClass().getResource("/assets/snakebackground.jpg").toExternalForm());
+            backgroundImage = new Image(getClass().getResource("src/assets/snakebackground.jpg").toExternalForm());
         } catch (Exception e) {
             System.out.println("Could not load background image: " + e.getMessage());
         }
@@ -104,6 +104,7 @@ public class SnakeUI extends BorderPane {
 
     private void render() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        final double CANVAS_WIDTH = canvas.getWidth();
         if (backgroundImage != null) {
             gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
         } else {
@@ -128,10 +129,20 @@ public class SnakeUI extends BorderPane {
 
         if (game.isGameOver()) {
             gc.setFill(Color.RED);
-            gc.setFont(Font.font(36));
-            gc.fillText("GAME OVER", 150, 200);
-            gc.setFont(Font.font(18));
-            gc.fillText("Press any key to restart", 160, 240);
+            String gameOverText = "GAME OVER";
+            gc.setFont(Font.font(50));
+            double gameOverWidth = calculateTextWidth(gameOverText, gc.getFont());
+            //x coordinate where the "GAME OVER"
+            double gameOverXCoordinate = (CANVAS_WIDTH / 2) - (gameOverWidth / 2);
+
+            gc.fillText(gameOverText, gameOverXCoordinate, 260); //y: 200
+
+            String restartText = "Press any key to restart";
+            gc.setFont(Font.font(22));
+            double restartWidth = calculateTextWidth(restartText, gc.getFont());
+            double restartXCoordinate = (CANVAS_WIDTH / 2) - (restartWidth / 2);
+            gc.fillText(restartText, restartXCoordinate, 290); //y:240
+
             if (game.getScore() > highestSnakeScore) {
                 gc.setFill(Color.GOLD);
                 gc.setFont(Font.font(18));
@@ -144,6 +155,14 @@ public class SnakeUI extends BorderPane {
             gc.setFont(Font.font(36));
             gc.fillText("GAME PAUSED", 150, 200);
         }
+    }
+
+    //helps center texts based on its length and the size of the screen
+    private double calculateTextWidth(String text, Font font) {
+        javafx.scene.text.Text tempText = new javafx.scene.text.Text(text);
+        tempText.setFont(font);
+        //returning the measured width of text
+        return tempText.getBoundsInLocal().getWidth();
     }
 
     public void pauseGame() {
