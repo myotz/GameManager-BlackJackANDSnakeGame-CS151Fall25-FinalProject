@@ -26,7 +26,7 @@ public class SnakeUI extends BorderPane {
 
     private final HighScoreManager highScoreManager;
     private final User currentUser;
-    private final AudioManager audio = new AudioManager();
+    private final AudioManager audio;
 
     private Direction pendingDirection = null;
     private boolean firstInput = true;
@@ -44,10 +44,12 @@ public class SnakeUI extends BorderPane {
         this.timeline = new Timeline();
         setCenter(canvas);
 
-        audio.playBackground();
+        
+        audio = new AudioManager(gameManager.getMusicVolume(), gameManager.getSfxVolume());
+        
 
         try {
-            backgroundImage = new Image(getClass().getResource("src/assets/snakebackground.jpg").toExternalForm());
+            backgroundImage = new Image(getClass().getResource("/assets/snakebackground.jpg").toExternalForm());
         } catch (Exception e) {
             System.out.println("Could not load background image: " + e.getMessage());
         }
@@ -135,13 +137,13 @@ public class SnakeUI extends BorderPane {
             //x coordinate where the "GAME OVER"
             double gameOverXCoordinate = (CANVAS_WIDTH / 2) - (gameOverWidth / 2);
 
-            gc.fillText(gameOverText, gameOverXCoordinate, 260); //y: 200
+            gc.fillText(gameOverText, gameOverXCoordinate, 260); //y: 260
 
             String restartText = "Press any key to restart";
             gc.setFont(Font.font(22));
             double restartWidth = calculateTextWidth(restartText, gc.getFont());
             double restartXCoordinate = (CANVAS_WIDTH / 2) - (restartWidth / 2);
-            gc.fillText(restartText, restartXCoordinate, 290); //y:240
+            gc.fillText(restartText, restartXCoordinate, 300); //y:300
 
             if (game.getScore() > highestSnakeScore) {
                 gc.setFill(Color.GOLD);
