@@ -8,24 +8,42 @@ public class AudioManager {
     private final MediaPlayer bgPlayer;
     private final MediaPlayer eatPlayer;
     private final MediaPlayer crashPlayer;
+    private double currentMusicVolume;
+    private double currentSfxVolume;
 
-    public AudioManager() {
-        bgPlayer   = createPlayer("/assets/snakemusic.mp3", true, 0.3);
-        eatPlayer  = createPlayer("/assets/eat.wav", false, 0.9);
-        crashPlayer = createPlayer("/assets/crash.wav", false, 0.9);
+    public AudioManager(double initialMusicVolume, double initialSfxVolume) {
+        bgPlayer   = createPlayer("/assets/snakemusic.mp3", true);
+        eatPlayer  = createPlayer("/assets/eat.wav", false);
+        crashPlayer = createPlayer("/assets/crash.wav", false);
+
+        setMusicVolume(initialMusicVolume);
+        setSfxVolume(initialSfxVolume);
     }
 
-    private MediaPlayer createPlayer(String path, boolean loop, double vol) {
+    private MediaPlayer createPlayer(String path, boolean loop) {
         try {
             Media m = new Media(getClass().getResource(path).toExternalForm());
             MediaPlayer p = new MediaPlayer(m);
-            p.setVolume(vol);
             if (loop) p.setCycleCount(MediaPlayer.INDEFINITE);
             return p;
         } catch (Exception e) {
             System.out.println("Couldn't load sound " + path + ": " + e.getMessage());
             return null;
         }
+    }
+
+    public void setMusicVolume(double volume) {
+        //max allowed volume is 1.0
+        this.currentMusicVolume = Math.max(0.0, Math.min(1.0, volume));
+        if (bgPlayer != null) 
+            bgPlayer.setVolume(this.currentMusicVolume);
+    }
+
+    public void setSfxVolume(double volume) {
+        //max allowed volume is 1.0
+        this.currentSfxVolume = Math.max(0.0, Math.min(1.0, volume));
+        if (eatPlayer != null) eatPlayer.setVolume(this.currentSfxVolume);
+        if (crashPlayer != null) crashPlayer.setVolume(this.currentSfxVolume);
     }
 
     public void playBackground() {

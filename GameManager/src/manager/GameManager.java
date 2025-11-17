@@ -16,6 +16,8 @@ public class GameManager {
     private User currentUser;
     private boolean gamePaused = false;
     private snake.SnakeUI activeSnakeUI;
+    private double musicVolume = 0.5; 
+    private double sfxVolume = 0.5; 
 
     public GameManager(Stage stage) {
         this.primaryStage = stage;
@@ -65,6 +67,22 @@ public class GameManager {
         showLoginScreen();
     }
 
+    public double getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(double volume) {
+        this.musicVolume = volume;
+    }
+    
+    public double getSfxVolume() {
+        return sfxVolume;
+    }
+
+    public void setSfxVolume(double volume) {
+        this.sfxVolume = volume;
+    }
+
     public void openBlackjackGame() {
         System.out.println("Launching Blackjack Game...");
         // TODO: Replace with BlackjackUI when ready
@@ -96,5 +114,7 @@ public class GameManager {
             gamePaused = !gamePaused;
         }
     }
+
+    
 
 }
