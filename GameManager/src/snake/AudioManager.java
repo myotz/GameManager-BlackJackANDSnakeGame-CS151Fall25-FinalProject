@@ -46,14 +46,8 @@ public class AudioManager {
 
     private void playOnce(MediaPlayer p) {
         if (p == null) return;
-<<<<<<< HEAD
         p.stop();          
         p.play();          
     }
 }
-=======
-        p.stop();
-        p.play();
-    }
-}
->>>>>>> chan
+

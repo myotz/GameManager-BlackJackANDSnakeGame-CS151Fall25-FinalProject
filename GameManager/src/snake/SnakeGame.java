@@ -66,7 +66,7 @@ public class SnakeGame {
             return;
         }
 
-        // ----- food or move -----
+        // food or move
         if (newHead.equals(food.getPosition())) {
             snake.grow(newHead);
             food.spawn(width, height);

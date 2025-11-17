@@ -6,10 +6,7 @@ import javafx.stage.Stage;
 import manager.models.AccountManager;
 import manager.models.HighScoreManager;
 import manager.models.User;
-<<<<<<< HEAD
 import javafx.scene.control.Button;
-=======
->>>>>>> chan
 
 public class GameManager {
 
@@ -17,22 +14,14 @@ public class GameManager {
     private final AccountManager accountManager;
     private final HighScoreManager highScoreManager;
     private User currentUser;
-<<<<<<< HEAD
     private boolean gamePaused = false;
     private snake.SnakeUI activeSnakeUI;
-=======
->>>>>>> chan
 
     public GameManager(Stage stage) {
         this.primaryStage = stage;
         this.accountManager = new AccountManager();
         this.highScoreManager = new HighScoreManager();
     }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> chan
     // Getters
     public AccountManager getAccountManager() {
         return accountManager;
@@ -83,7 +72,6 @@ public class GameManager {
 
     public void openSnakeGame() {
         System.out.println("Launching Snake Game...");
-<<<<<<< HEAD
         snake.SnakeUI snakeUI = new snake.SnakeUI(this);
         activeSnakeUI = snakeUI;
 
@@ -109,8 +97,4 @@ public class GameManager {
         }
     }
 
-=======
-        // TODO: Replace with your SnakeUI when ready
-    }
->>>>>>> chan
 }
