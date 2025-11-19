@@ -73,6 +73,11 @@ public class Player {
         this.bet = 0;
     }
 
+    //TYPE:name:money:bet:[cards]
+    public String encodeType(String type) {
+        return type + ":" + name + ":" + money + ":" + bet + ":[" + hand.encode() + "]";
+    }
+
     @Override
     public String toString() {
         return name + " (Money: $" + money + ", Bet: $" + bet + ", Hand Value: " + hand.value() + ")";
