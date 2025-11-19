@@ -28,17 +28,26 @@ public class HighScoreManager {
                     String userName = parts[0];
                     int blackjack = Integer.parseInt(parts[1]);
                     int snakeGame = Integer.parseInt(parts[2]);
-                    highScores.put(userName, new int[]{blackjack,snakeGame});
+                    highScores.put(userName, new int[] { blackjack, snakeGame });
                 }
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateScore(String username, int blackjackScore, int snakeScore) {
-        highScores.put(username, new int[]{blackjackScore, snakeScore});
+    public void updateScore(String username, Integer blackjackScore, Integer snakeScore) {
+        int[] current = highScores.getOrDefault(username, new int[] { 0, 0 });
+
+        int newBlackjack = (blackjackScore != null)
+                ? Math.max(current[0], blackjackScore)
+                : current[0];
+
+        int newSnake = (snakeScore != null)
+                ? Math.max(current[1], snakeScore)
+                : current[1];
+
+        highScores.put(username, new int[] { newBlackjack, newSnake });
         saveScores();
     }
 
@@ -53,8 +62,7 @@ public class HighScoreManager {
                 int[] scores = map.getValue();
                 pw.println(userName + "," + scores[0] + "," + scores[1]);
             }
-        } 
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -80,4 +88,15 @@ public class HighScoreManager {
     public Map<String, int[]> getAllScores() {
         return highScores;
     }
+
+    public int getBlackjackScore(String username) {
+        int[] scores = highScores.getOrDefault(username, new int[] { 0, 0 });
+        return scores[0];
+    }
+
+    public int getSnakeScore(String username) {
+        int[] scores = highScores.getOrDefault(username, new int[] { 0, 0 });
+        return scores[1];
+    }
+
 }
