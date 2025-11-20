@@ -69,6 +69,19 @@ public class SnakeUI extends BorderPane {
     }
 
     private void handleKey(KeyEvent e) {
+        switch (e.getCode()) {
+            case ESCAPE -> {
+                if (gamePaused) {
+                    resumeGame();
+                } else {
+                    pauseGame();
+                }
+                e.consume();
+                return;
+            }
+            default -> {
+            }
+        }
         if (game.isGameOver()) {
             restartGame();
             e.consume();
@@ -167,6 +180,14 @@ public class SnakeUI extends BorderPane {
         return tempText.getBoundsInLocal().getWidth();
     }
 
+    public void stopGame() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+        audio.stopBackground();
+        gamePaused = true;
+    }
+    
     public void pauseGame() {
         if (timeline != null && timeline.getStatus() == Timeline.Status.RUNNING) {
             timeline.pause();
