@@ -11,10 +11,10 @@ public class LoginScreen {
     private final VBox vbox;
 
     public LoginScreen(GameManager gameManager, AccountManager accountManager) {
-        vbox = new VBox(15);
+        vbox = new VBox(15); 
         vbox.setAlignment(Pos.CENTER);
         vbox.setFillWidth(false); 
-        vbox.setStyle("-fx-background-color: linear-gradient(to bottom right, #36d1dc, #5b86e5);");
+        vbox.setStyle("-fx-background-color: #5b86e5;");
 
 
         Label title = new Label("WELCOME TO BLACKJACK AND SNAKE");
@@ -35,7 +35,10 @@ public class LoginScreen {
         HBox hbox = new HBox(10, login, createAccount);
         hbox.setAlignment(Pos.CENTER);
 
-        vbox.getChildren().addAll(title, usernameText, passwordText, hbox, message);
+        Button forgotPasswordBtn = new Button("Forgot Password");
+        forgotPasswordBtn.setAlignment(Pos.CENTER);
+
+        vbox.getChildren().addAll(title, usernameText, passwordText, hbox, forgotPasswordBtn, message);
 
         login.setOnAction(e -> {
             String username = usernameText.getText().trim();
@@ -48,11 +51,17 @@ public class LoginScreen {
                 gameManager.showMainMenu();
             } else {
                 System.out.println("Invalid username or password");
+                message.setText("Invalid username or password");
             }
         });
 
         createAccount.setOnAction(e -> {
             CreateAccountMenu popup = new CreateAccountMenu(accountManager, message);
+            popup.show();
+        });
+
+        forgotPasswordBtn.setOnAction(e -> {
+            ForgotPasswordMenu popup = new ForgotPasswordMenu(accountManager, message);
             popup.show();
         });
 

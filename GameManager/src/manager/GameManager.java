@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import manager.models.AccountManager;
 import manager.models.HighScoreManager;
 import manager.models.User;
+import javafx.scene.control.Button;
 
 public class GameManager {
 
@@ -13,13 +14,16 @@ public class GameManager {
     private final AccountManager accountManager;
     private final HighScoreManager highScoreManager;
     private User currentUser;
+    private boolean gamePaused = false;
+    private snake.SnakeUI activeSnakeUI;
+    private double musicVolume = 0.5; 
+    private double sfxVolume = 0.5; 
 
     public GameManager(Stage stage) {
         this.primaryStage = stage;
         this.accountManager = new AccountManager();
         this.highScoreManager = new HighScoreManager();
     }
-    
     // Getters
     public AccountManager getAccountManager() {
         return accountManager;
@@ -63,6 +67,22 @@ public class GameManager {
         showLoginScreen();
     }
 
+    public double getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(double volume) {
+        this.musicVolume = volume;
+    }
+    
+    public double getSfxVolume() {
+        return sfxVolume;
+    }
+
+    public void setSfxVolume(double volume) {
+        this.sfxVolume = volume;
+    }
+
     public void openBlackjackGame() {
         System.out.println("Launching Blackjack Game...");
         // TODO: Replace with BlackjackUI when ready
@@ -70,6 +90,31 @@ public class GameManager {
 
     public void openSnakeGame() {
         System.out.println("Launching Snake Game...");
-        // TODO: Replace with your SnakeUI when ready
+        snake.SnakeUI snakeUI = new snake.SnakeUI(this);
+        activeSnakeUI = snakeUI;
+
+        BorderPane root = new BorderPane();
+        root.setTop(new Toolbar(this).getLayout());
+        root.setCenter(snakeUI);
+
+        Scene scene = new Scene(root, 1000, 700);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Snake Game");
     }
+
+    public void pauseGame(Button pauseButton) {
+        if (activeSnakeUI != null) {
+            if (!gamePaused) {
+                activeSnakeUI.pauseGame();
+                pauseButton.setText("Resume");
+            } else {
+                activeSnakeUI.resumeGame();
+                pauseButton.setText("Pause");
+            }
+            gamePaused = !gamePaused;
+        }
+    }
+
+    
+
 }

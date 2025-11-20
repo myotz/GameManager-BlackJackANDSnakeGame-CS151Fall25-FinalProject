@@ -25,30 +25,15 @@ public class Hand {
         int aceCount = 0;
 
         for (Card c : cards) {
-            switch (c.getRank()) {
-                case TWO: total += 2; break;
-                case THREE: total += 3; break;
-                case FOUR: total += 4; break;
-                case FIVE: total += 5; break;
-                case SIX: total += 6; break;
-                case SEVEN: total += 7; break;
-                case EIGHT: total += 8; break;
-                case NINE: total += 9; break;
-                case TEN:
-                case JACK:
-                case QUEEN:
-                case KING:
-                    total += 10; break;
-                case ACE:
-                    total += 11;
-                    aceCount++;
-                    break;
+            total += c.getValue(); // use Rank’s built-in value
+            if (c.getRank() == Rank.ACE) {
+                aceCount++;
             }
         }
 
         // downgrade Aces from 11 → 1 if busting
         while (total > 21 && aceCount > 0) {
-            total -= 10;
+            total -= 10; // adjust one Ace
             aceCount--;
         }
 
@@ -64,29 +49,46 @@ public class Hand {
         int aceCount = 0;
 
         for (Card c : cards) {
-            switch (c.getRank()) {
-                case TWO: total += 2; break;
-                case THREE: total += 3; break;
-                case FOUR: total += 4; break;
-                case FIVE: total += 5; break;
-                case SIX: total += 6; break;
-                case SEVEN: total += 7; break;
-                case EIGHT: total += 8; break;
-                case NINE: total += 9; break;
-                case TEN:
-                case JACK:
-                case QUEEN:
-                case KING:
-                    total += 10; break;
-                case ACE:
-                    total += 11;
-                    aceCount++;
-                    break;
+            total += c.getValue();
+            if (c.getRank() == Rank.ACE) {
+                aceCount++;
             }
         }
 
-        // if total ≤ 21 and at least one Ace counted as 11, it's soft
-        return total <= 21 && aceCount > 0;
+        int softAces = aceCount;
+        while (total > 21 && softAces > 0) {
+            total -= 10;
+            softAces--;
+        }
+
+        return softAces > 0;
+    }
+
+    // clear the cards
+    public void clear() {
+        cards.clear();
+    }
+
+    //H-A, C-9, D-2, etc
+    public String encode() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cards.size(); i++) {
+            if (i > 0)
+                sb.append(",");
+            sb.append(cards.get(i).encode());
+        }
+        return sb.toString();
+    }
+
+    
+    public static Hand decode(String data) {
+        Hand h = new Hand();
+        if (data == null || data.isEmpty())
+            return h;
+        for (String t : data.split(",")) {
+            h.add(Card.decode(t));
+        }
+        return h;
     }
 
     @Override
@@ -94,4 +96,3 @@ public class Hand {
         return cards.toString() + " (" + value() + ")";
     }
 }
-

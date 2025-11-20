@@ -1,19 +1,21 @@
 package blackjack.model;
-enum Rank {
-   TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
-}
-public class Card {
-    private final String suit;
-    private final Rank rank;
-    private final int value;
 
-    public Card(String suit, Rank rank, int value) {
+/*enum Rank {
+   TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
+}*/
+
+public class Card {
+    private final Suit suit;
+    private final Rank rank;
+    // private final int value;
+
+    public Card(Suit suit, Rank rank) {
         this.suit = suit;
         this.rank = rank;
-        this.value = value;
+        // this.value = value;
     }
 
-    public String getSuit() {
+    public Suit getSuit() {
         return suit;
     }
 
@@ -22,7 +24,16 @@ public class Card {
     }
 
     public int getValue() {
-        return value;
+        return rank.getValue();
+    }
+    
+    public String encode() {
+        return suit.code() + "-" + rank.code();
+    }
+
+    public static Card decode(String token) {
+        String[] parts = token.split("-", 2);
+        return new Card(Suit.fromCode(parts[0]), Rank.fromCode(parts[1]));
     }
 
     @Override
