@@ -26,7 +26,7 @@ public class Card {
     public int getValue() {
         return rank.getValue();
     }
-    
+
     public String encode() {
         return suit.code() + "-" + rank.code();
     }
@@ -38,6 +38,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return rank + " of " + suit;
+        return rank.code() + "-" + suit.code();
     }
+
 }
