@@ -3,6 +3,9 @@ package blackjack.model;
 import java.util.ArrayList;
 import java.util.List;
 
+//Handles saving and loading of the entire blackjack game state
+//to and from a string
+//
 public class GameSaveHandler {
 
     //SAVE
