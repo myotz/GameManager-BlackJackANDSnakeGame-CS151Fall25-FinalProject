@@ -146,6 +146,16 @@ public class SnakeUI extends BorderPane {
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         }
 
+        gc.setStroke(Color.web("#f3f71ee2"));
+        gc.setLineWidth(0.5);
+
+        for (int x = 0; x <= gridWidth; x++) {
+            gc.strokeLine(x * cellSize, 0, x * cellSize, gridHeight * cellSize);
+        }
+        for (int y = 0; y <= gridHeight; y++) {
+            gc.strokeLine(0, y * cellSize, gridWidth * cellSize, y * cellSize);
+        }
+
         gc.setFill(Color.RED);
         Point2D food = game.getFood().getPosition();
         gc.fillOval(food.getX() * cellSize, food.getY() * cellSize, cellSize, cellSize);
