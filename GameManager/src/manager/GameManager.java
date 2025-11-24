@@ -85,11 +85,23 @@ public class GameManager {
 
     public void openBlackjackGame() {
         System.out.println("Launching Blackjack Game...");
-        // TODO: Replace with BlackjackUI when ready
+        blackjack.BlackjackUI bj = new blackjack.BlackjackUI(this);
+
+        BorderPane root = new BorderPane();
+        root.setTop(new Toolbar(this).getLayout());
+        root.setCenter(bj);
+
+        Scene scene = new Scene(root, 1000, 700);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Blackjack");
     }
 
     public void openSnakeGame() {
         System.out.println("Launching Snake Game...");
+        if (activeSnakeUI != null) {
+            activeSnakeUI.stopGame();
+            activeSnakeUI = null;
+        }
         snake.SnakeUI snakeUI = new snake.SnakeUI(this);
         activeSnakeUI = snakeUI;
 
@@ -115,6 +127,11 @@ public class GameManager {
         }
     }
 
-    
+    public void stopSnakeGame() {
+        if (activeSnakeUI != null) {
+            activeSnakeUI.stopGame(); 
+            activeSnakeUI = null; 
+        }
+    }
 
 }

@@ -14,6 +14,9 @@ import manager.GameManager;
 import manager.models.HighScoreManager;
 import manager.models.User;
 import javafx.scene.image.Image;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 
 public class SnakeUI extends BorderPane {
     private final int cellSize = 20;
@@ -23,6 +26,11 @@ public class SnakeUI extends BorderPane {
     private final SnakeGame game;
     private final Canvas canvas;
     private final Timeline timeline;
+
+    private final VBox gameTextBox = new VBox(10);
+    private final Label messageLabel = new Label();
+    private final Label subMessageLabel = new Label();
+    private final Label scoreLabel = new Label();
 
     private final HighScoreManager highScoreManager;
     private final User currentUser;
@@ -42,8 +50,6 @@ public class SnakeUI extends BorderPane {
         this.game = new SnakeGame(gridWidth, gridHeight);
         this.canvas = new Canvas(gridWidth * cellSize, gridHeight * cellSize);
         this.timeline = new Timeline();
-        setCenter(canvas);
-
         
         audio = new AudioManager(gameManager.getMusicVolume(), gameManager.getSfxVolume());
         
@@ -64,11 +70,37 @@ public class SnakeUI extends BorderPane {
         KeyFrame frame = new KeyFrame(Duration.millis(gameSpeed), e -> gameLoop());
         timeline.getKeyFrames().add(frame);
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.pause();
+
+        gameTextBox.setAlignment(Pos.CENTER);
+        messageLabel.setFont(Font.font("Arial", FontWeight.BOLD, 36));
+        messageLabel.setTextFill(Color.WHITE);
+        subMessageLabel.setFont(Font.font("Arial", 18));
+        subMessageLabel.setTextFill(Color.WHITE);
+        scoreLabel.setFont(Font.font("Arial", 30));
+        scoreLabel.setTextFill(Color.GOLD);
+        gameTextBox.getChildren().addAll(messageLabel, subMessageLabel, scoreLabel);
+        gameTextBox.setVisible(false);
+
+        StackPane stackPane = new StackPane(canvas, gameTextBox);
+        stackPane.setAlignment(Pos.CENTER);
+        setCenter(stackPane);
         render();
     }
 
     private void handleKey(KeyEvent e) {
+        switch (e.getCode()) {
+            case ESCAPE -> {
+                if (gamePaused) {
+                    resumeGame();
+                } else {
+                    pauseGame();
+                }
+                e.consume();
+                return;
+            }
+            default -> {
+            }
+        }
         if (game.isGameOver()) {
             restartGame();
             e.consume();
@@ -114,6 +146,16 @@ public class SnakeUI extends BorderPane {
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         }
 
+        gc.setStroke(Color.web("#f3f71ee2"));
+        gc.setLineWidth(0.5);
+
+        for (int x = 0; x <= gridWidth; x++) {
+            gc.strokeLine(x * cellSize, 0, x * cellSize, gridHeight * cellSize);
+        }
+        for (int y = 0; y <= gridHeight; y++) {
+            gc.strokeLine(0, y * cellSize, gridWidth * cellSize, y * cellSize);
+        }
+
         gc.setFill(Color.RED);
         Point2D food = game.getFood().getPosition();
         gc.fillOval(food.getX() * cellSize, food.getY() * cellSize, cellSize, cellSize);
@@ -129,33 +171,30 @@ public class SnakeUI extends BorderPane {
         gc.fillText("Current: " + game.getScore(), 10, 20);
         gc.fillText("Highest: " + highestSnakeScore, 10, 40);
 
-        if (game.isGameOver()) {
-            gc.setFill(Color.RED);
-            String gameOverText = "GAME OVER";
-            gc.setFont(Font.font(50));
-            double gameOverWidth = calculateTextWidth(gameOverText, gc.getFont());
-            //x coordinate where the "GAME OVER"
-            double gameOverXCoordinate = (CANVAS_WIDTH / 2) - (gameOverWidth / 2);
+        gameTextBox.setVisible(false);
+        String state = getGameState();
 
-            gc.fillText(gameOverText, gameOverXCoordinate, 260); //y: 260
-
-            String restartText = "Press any key to restart";
-            gc.setFont(Font.font(22));
-            double restartWidth = calculateTextWidth(restartText, gc.getFont());
-            double restartXCoordinate = (CANVAS_WIDTH / 2) - (restartWidth / 2);
-            gc.fillText(restartText, restartXCoordinate, 300); //y:300
-
-            if (game.getScore() > highestSnakeScore) {
-                gc.setFill(Color.GOLD);
-                gc.setFont(Font.font(18));
-                gc.fillText("New Highest " + game.getScore(), 160, 280);
+        switch (state) {
+            case "GAME_OVER" -> {
+                gameTextBox.setVisible(true);
+                messageLabel.setText("GAME OVER");
+                subMessageLabel.setText("Press any key to restart");
+                if (game.getScore() > highestSnakeScore) {
+                    scoreLabel.setText("New Highest: " + game.getScore());
+                    scoreLabel.setTextFill(Color.GOLD);
+                } else {
+                    scoreLabel.setText("Your Score: " + game.getScore());
+                    scoreLabel.setTextFill(Color.WHITE);
+                }
             }
-        }
 
-        if (gamePaused) {
-            gc.setFill(Color.RED);
-            gc.setFont(Font.font(36));
-            gc.fillText("GAME PAUSED", 150, 200);
+            case "PAUSED" -> {
+                gameTextBox.setVisible(true);
+                messageLabel.setText("GAME PAUSED");
+                scoreLabel.setText("");
+            }
+
+            default -> gameTextBox.setVisible(false);
         }
     }
 
@@ -167,6 +206,14 @@ public class SnakeUI extends BorderPane {
         return tempText.getBoundsInLocal().getWidth();
     }
 
+    public void stopGame() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+        audio.stopBackground();
+        gamePaused = true;
+    }
+    
     public void pauseGame() {
         if (timeline != null && timeline.getStatus() == Timeline.Status.RUNNING) {
             timeline.pause();
@@ -228,6 +275,14 @@ public class SnakeUI extends BorderPane {
             timeline.stop();
             highScoreManager.updateScore(currentUser.getUserName(), null, game.getScore());
         }
+    }
+
+    private String getGameState() {
+        if (game.isGameOver())
+            return "GAME_OVER";
+        if (gamePaused)
+            return "PAUSED";
+        return "RUNNING";
     }
 
 }

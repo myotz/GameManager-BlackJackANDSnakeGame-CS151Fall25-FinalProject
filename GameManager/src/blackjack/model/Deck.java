@@ -48,7 +48,7 @@ public class Deck {
                 sb.append(",");
             sb.append(cards.get(i).encode());
         }
-        return "index =" + index + "|seq=" + sb;
+        return "index=" + index + "|seq=" + sb;
     }
 
     // To restore and rebuild the deck from the encoded string

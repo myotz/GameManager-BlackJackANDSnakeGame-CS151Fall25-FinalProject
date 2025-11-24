@@ -18,7 +18,7 @@ public class Player {
 
     public void clear() {
         hand.clear();
-        bet = 0;
+        // bet = 0;
     }
 
     public int getValue() {
@@ -43,6 +43,10 @@ public class Player {
 
     public int getBet() {
         return bet;
+    }
+
+    public void clearBet() {
+        this.bet = 0;
     }
 
     public void playBet(int amount) {
@@ -73,7 +77,7 @@ public class Player {
         this.bet = 0;
     }
 
-    //TYPE:name:money:bet:[cards]
+    // TYPE:name:money:bet:[cards]
     public String encodeType(String type) {
         return type + ":" + name + ":" + money + ":" + bet + ":[" + hand.encode() + "]";
     }
