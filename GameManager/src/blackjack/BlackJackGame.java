@@ -2,7 +2,7 @@ package blackjack;
 
 import blackjack.model.*;
 
-public class BlackjackGame {
+public class BlackJackGame {
 
     public interface Listener {
         void onStateChanged(GameState state, String message);
@@ -12,13 +12,15 @@ public class BlackjackGame {
 
     private GameState state;
     private Listener listener;
+    private final SoundManager sound;
 
-    public BlackjackGame(String username, int startingMoney) {
+    public BlackJackGame(String username, int startingMoney) {
         state = new GameState(username, startingMoney);
         // state.human = new Player(username, startingMoney);
         state.bot1 = new Bot("Bot 1", 1000, 16);
         state.bot2 = new Bot("Bot 2", 1000, 14);
         state.dealer = new Dealer();
+        sound = new SoundManager(0.5, 0.85);
     }
 
     public void setListener(Listener listener) {
@@ -38,6 +40,7 @@ public class BlackjackGame {
         state.revealDealerHole = false;
         state.message = "Started new round. Place your bet!";
         notifyChange(state.message);
+        sound.playBackground();
     }
 
     public void startRoundIfReady() {
@@ -67,6 +70,7 @@ public class BlackjackGame {
         for (int i = 0; i < 2; i++) {
             for (Player p : state.turnOrder()) {
                 p.add(state.deck.dealCard());
+                sound.playDrawCard();
             }
         }
     }
@@ -106,8 +110,10 @@ public class BlackjackGame {
         if (!isHumansTurn())
             return;
         state.human.add(state.deck.dealCard());
+        sound.playDrawCard();
         if (state.human.isBust()) {
             state.message = "Human busts!";
+            sound.playDealerWin(); 
             nextTurn();
         } else {
             state.message = "Human hits.";
@@ -156,6 +162,7 @@ public class BlackjackGame {
         // Bot.hit()
         if (!bot.isBust() && bot.hit()) {
             bot.add(state.deck.dealCard());
+            sound.playDrawCard();  
             state.message = bot.getName() + " hits.";
             if (bot.isBust()) {
                 state.message = bot.getName() + " busts!";
@@ -179,6 +186,7 @@ public class BlackjackGame {
         Dealer d = state.dealer;
         if (!d.isBust() && d.shouldHit()) {
             d.add(state.deck.dealCard());
+            sound.playDrawCard(); 
             state.message = "Dealer hits.";
             if (d.isBust()) {
                 state.message = "Dealer busts!";
@@ -212,14 +220,19 @@ public class BlackjackGame {
                 javafx.util.Duration.seconds(0.8));
         pause.setOnFinished(e -> {
             Player dealer = state.dealer;
-
+            
+            boolean humanSoundPlayed = false;
             // Determine outcome for each player
             for (Player p : new Player[] { state.human, state.bot1, state.bot2 }) {
                 GameLogic.Outcome out = GameLogic.compare(p, dealer);
 
                 switch (out) {
                     case WIN -> {
-                        p.winBet(); 
+                        p.winBet();
+                        if(!humanSoundPlayed && p == state.human) {
+                            sound.playPlayerWin();
+                            humanSoundPlayed = true;
+                        }
                         //System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
                     }
                     case PUSH -> {
@@ -228,6 +241,10 @@ public class BlackjackGame {
                     }
                     case LOSE -> {
                         p.loseBet(); 
+                        if (!humanSoundPlayed && p == state.human) {
+                            sound.playDealerWin(); 
+                            humanSoundPlayed = true;
+                        }
                         //System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
                     }
                 }
@@ -252,8 +269,9 @@ public class BlackjackGame {
         if (listener != null) {
             listener.onStateChanged(state, "Started new round. Place your bet!");
         }
+        sound.playBackground();
     }
-
+    
     // Save / Load
 
     public String save() {
