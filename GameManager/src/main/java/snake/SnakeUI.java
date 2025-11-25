@@ -1,4 +1,4 @@
-package main.java.snake;
+package snake;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -10,9 +10,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import main.java.manager.GameManager;
-import main.java.manager.models.HighScoreManager;
-import main.java.manager.models.User;
+import manager.GameManager;
+import manager.models.HighScoreManager;
+import manager.models.User;
 import javafx.scene.image.Image;
 
 public class SnakeUI extends BorderPane {
@@ -44,9 +44,7 @@ public class SnakeUI extends BorderPane {
         this.timeline = new Timeline();
         setCenter(canvas);
 
-        
         audio = new AudioManager(gameManager.getMusicVolume(), gameManager.getSfxVolume());
-        
 
         try {
             backgroundImage = new Image(getClass().getResource("/assets/snakebackground.jpg").toExternalForm());
@@ -123,7 +121,7 @@ public class SnakeUI extends BorderPane {
         if (backgroundImage != null) {
             gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
         } else {
-            gc.setFill(Color.BLACK); 
+            gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         }
 
@@ -147,16 +145,16 @@ public class SnakeUI extends BorderPane {
             String gameOverText = "GAME OVER";
             gc.setFont(Font.font(50));
             double gameOverWidth = calculateTextWidth(gameOverText, gc.getFont());
-            //x coordinate where the "GAME OVER"
+            // x coordinate where the "GAME OVER"
             double gameOverXCoordinate = (CANVAS_WIDTH / 2) - (gameOverWidth / 2);
 
-            gc.fillText(gameOverText, gameOverXCoordinate, 260); //y: 260
+            gc.fillText(gameOverText, gameOverXCoordinate, 260); // y: 260
 
             String restartText = "Press any key to restart";
             gc.setFont(Font.font(22));
             double restartWidth = calculateTextWidth(restartText, gc.getFont());
             double restartXCoordinate = (CANVAS_WIDTH / 2) - (restartWidth / 2);
-            gc.fillText(restartText, restartXCoordinate, 300); //y:300
+            gc.fillText(restartText, restartXCoordinate, 300); // y:300
 
             if (game.getScore() > highestSnakeScore) {
                 gc.setFill(Color.GOLD);
@@ -172,11 +170,11 @@ public class SnakeUI extends BorderPane {
         }
     }
 
-    //helps center texts based on its length and the size of the screen
+    // helps center texts based on its length and the size of the screen
     private double calculateTextWidth(String text, Font font) {
         javafx.scene.text.Text tempText = new javafx.scene.text.Text(text);
         tempText.setFont(font);
-        //returning the measured width of text
+        // returning the measured width of text
         return tempText.getBoundsInLocal().getWidth();
     }
 
@@ -187,7 +185,7 @@ public class SnakeUI extends BorderPane {
         audio.stopBackground();
         gamePaused = true;
     }
-    
+
     public void pauseGame() {
         if (timeline != null && timeline.getStatus() == Timeline.Status.RUNNING) {
             timeline.pause();
@@ -217,7 +215,7 @@ public class SnakeUI extends BorderPane {
         render();
     }
 
-    //Increase speed every time score hits a multiple of 50
+    // Increase speed every time score hits a multiple of 50
     private void adjustSpeed() {
         if (game.getScore() % 50 == 0) {
             double currentSpeed = timeline.getRate();

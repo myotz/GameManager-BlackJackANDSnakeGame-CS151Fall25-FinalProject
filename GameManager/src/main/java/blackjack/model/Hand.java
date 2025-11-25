@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class Hand {
         cards.clear();
     }
 
-    //H-A, C-9, D-2, etc
+    // H-A, C-9, D-2, etc
     public String encode() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cards.size(); i++) {
@@ -80,7 +80,6 @@ public class Hand {
         return sb.toString();
     }
 
-    
     public static Hand decode(String data) {
         Hand h = new Hand();
         if (data == null || data.isEmpty())

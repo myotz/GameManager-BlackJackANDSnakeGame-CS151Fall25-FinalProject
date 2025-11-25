@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 public class Bot extends Player {
     private final int hitThreshold;

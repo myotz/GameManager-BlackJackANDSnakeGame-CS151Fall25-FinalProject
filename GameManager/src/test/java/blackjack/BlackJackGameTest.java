@@ -1,4 +1,4 @@
-package test.java.blackjack;
+package blackjack;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

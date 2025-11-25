@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 //
 public class GameSaveHandler {
 
-    //SAVE
+    // SAVE
     public static String save(GameState state) {
         StringBuilder sb = new StringBuilder();
         sb.append("v1|turn=").append(state.turnIndex)
@@ -30,7 +30,7 @@ public class GameSaveHandler {
         return sb.toString();
     }
 
-    //LOAD
+    // LOAD
     public static GameState load(String save) {
         if (save == null || save.isEmpty())
             throw new IllegalArgumentException("Empty save");
@@ -45,7 +45,6 @@ public class GameSaveHandler {
                 + sections[4].substring(sections[4].indexOf('=') + 1);
 
         String playersStr = sections[5].substring(sections[5].indexOf('=') + 1);
-
 
         GameState gs = new GameState();
         gs.deck = Deck.decode(deckStr);

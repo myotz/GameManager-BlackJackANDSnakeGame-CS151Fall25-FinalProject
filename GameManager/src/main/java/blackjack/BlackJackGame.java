@@ -1,6 +1,6 @@
-package main.java.blackjack;
+package blackjack;
 
-import main.java.blackjack.model.*;
+import blackjack.model.*;
 
 public class BlackJackGame {
 
@@ -32,7 +32,7 @@ public class BlackJackGame {
 
     public void newGame(String username, int money) {
         state.resetRound();
-        //state = new GameState(username, money);
+        // state = new GameState(username, money);
         state.phase = GameState.Phase.BETTING;
         state.turnIndex = 0;
         state.revealDealerHole = false;
@@ -219,16 +219,16 @@ public class BlackJackGame {
 
                 switch (out) {
                     case WIN -> {
-                        p.winBet(); 
-                        //System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
+                        p.winBet();
+                        // System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
                     }
                     case PUSH -> {
-                        p.pushBet(); 
-                        //System.out.println(p.getName() + " pushes. New balance: " + p.getMoney());
+                        p.pushBet();
+                        // System.out.println(p.getName() + " pushes. New balance: " + p.getMoney());
                     }
                     case LOSE -> {
-                        p.loseBet(); 
-                        //System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
+                        p.loseBet();
+                        // System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
                     }
                 }
             }
@@ -240,7 +240,7 @@ public class BlackJackGame {
 
             if (listener != null) {
                 listener.onRoundEnded(state, null);
-                //listener.onStateChanged(state, "Round updated.");
+                // listener.onStateChanged(state, "Round updated.");
             }
         });
 

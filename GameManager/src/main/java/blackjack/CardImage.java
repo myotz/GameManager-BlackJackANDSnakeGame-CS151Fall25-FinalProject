@@ -1,4 +1,4 @@
-package main.java.blackjack;
+package blackjack;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -14,7 +14,8 @@ public class CardImage {
 
     /**
      * Creates an image node for a card code (like "K-S" or "10-H").
-     * @param code The card code (Rank-Suit), e.g., "K-S"
+     * 
+     * @param code   The card code (Rank-Suit), e.g., "K-S"
      * @param hidden If true, shows the back of the card instead.
      * @return An image node
      */

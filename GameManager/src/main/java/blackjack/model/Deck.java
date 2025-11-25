@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 import java.util.ArrayList;
 import java.util.Collections;

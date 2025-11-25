@@ -1,4 +1,4 @@
-package main.java.snake;
+package snake;
 
 import javafx.geometry.Point2D;
 import java.util.Random;
@@ -7,7 +7,7 @@ public class Food {
     private Point2D position;
 
     public Food(int x, int y) {
-        spawn(x,y);
+        spawn(x, y);
     }
 
     public void spawn(int width, int height) {

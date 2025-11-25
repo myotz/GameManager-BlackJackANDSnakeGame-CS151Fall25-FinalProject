@@ -1,4 +1,4 @@
-package main.java.manager;
+package manager;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,7 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.java.manager.models.AccountManager;
+import manager.models.AccountManager;
 
 public class CreateAccountMenu {
     private final Stage window;
@@ -22,7 +22,7 @@ public class CreateAccountMenu {
         layout = new VBox(15);
         layout.setAlignment(Pos.CENTER);
         layout.setFillWidth(false);
-        //layout.setPadding(new Insets(20));
+        // layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: #1fcfa6e7;");
 
         Label title = new Label("Create a New Account");

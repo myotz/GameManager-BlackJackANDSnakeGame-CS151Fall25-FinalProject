@@ -1,4 +1,4 @@
-package main.java.blackjack;
+package blackjack;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -6,9 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import main.java.blackjack.model.*;
-import main.java.manager.GameManager;
-import main.java.manager.models.User;
+import blackjack.model.*;
+import manager.GameManager;
+import manager.models.User;
 
 public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
     private final User CurUser;
@@ -166,7 +166,7 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
         return box;
     }
 
-    //Save state
+    // Save state
     private void saveGame() {
         String save = game.save();
         TextArea area = new TextArea(save);
@@ -180,7 +180,7 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
         dlg.showAndWait();
     }
 
-    //load state
+    // load state
     private void loadGame() {
         TextArea area = new TextArea();
         area.setWrapText(true);
@@ -237,8 +237,8 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
         // Human
         switch (humanOutcome) {
             case WIN -> result.append(CurUser.getUserName())
-                .append(" won $").append(Math.abs(humanChange / 2))
-                .append(" | ");
+                    .append(" won $").append(Math.abs(humanChange / 2))
+                    .append(" | ");
             case LOSE -> result.append(CurUser.getUserName())
                     .append(" lost $").append(Math.abs(humanBet)).append(" | ");
             case PUSH -> result.append(CurUser.getUserName())
@@ -265,7 +265,7 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
 
         state.message = result.toString();
 
-        // Update UI money values 
+        // Update UI money values
         humanMoney.setText("$" + state.human.getMoney());
         bot1Money.setText("$" + state.bot1.getMoney());
         bot2Money.setText("$" + state.bot2.getMoney());

@@ -1,21 +1,20 @@
-package main.java.manager;
+package manager;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import main.java.manager.models.AccountManager;
-import main.java.manager.models.User;
+import manager.models.AccountManager;
+import manager.models.User;
 
 public class LoginScreen {
     private final VBox vbox;
 
     public LoginScreen(GameManager gameManager, AccountManager accountManager) {
-        vbox = new VBox(15); 
+        vbox = new VBox(15);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setFillWidth(false); 
+        vbox.setFillWidth(false);
         vbox.setStyle("-fx-background-color: #5b86e5;");
-
 
         Label title = new Label("WELCOME TO BLACKJACK AND SNAKE");
         title.setFont(Font.font(22));

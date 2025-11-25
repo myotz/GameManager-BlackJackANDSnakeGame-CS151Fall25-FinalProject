@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +27,17 @@ public class GameState {
     public Bot bot2;
     public Dealer dealer;
 
-    //Game control state
+    // Game control state
     public Phase phase = Phase.BETTING;
     public int round = 1;
     public int turnIndex = 0; // 0=human, 1=bot1, 2=bot2, 3=dealer
     public boolean revealDealerHole = false;
     public String message = "";
 
-    //Constructor
+    // Constructor
 
     public GameState() {
-        this("Human", 1000); 
+        this("Human", 1000);
     }
 
     public GameState(String username, int startingMoney) {
@@ -58,7 +58,7 @@ public class GameState {
         return list;
     }
 
-    //Turn progression 
+    // Turn progression
     public Player currentPlayer() {
         return turnOrder().get(turnIndex);
     }

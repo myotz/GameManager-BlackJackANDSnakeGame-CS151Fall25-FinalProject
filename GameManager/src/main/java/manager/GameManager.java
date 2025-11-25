@@ -1,11 +1,11 @@
-package main.java.manager;
+package manager;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import main.java.manager.models.AccountManager;
-import main.java.manager.models.HighScoreManager;
-import main.java.manager.models.User;
+import manager.models.AccountManager;
+import manager.models.HighScoreManager;
+import manager.models.User;
 import javafx.scene.control.Button;
 
 public class GameManager {
@@ -15,15 +15,16 @@ public class GameManager {
     private final HighScoreManager highScoreManager;
     private User currentUser;
     private boolean gamePaused = false;
-    private main.java.snake.SnakeUI activeSnakeUI;
-    private double musicVolume = 0.5; 
-    private double sfxVolume = 0.5; 
+    private snake.SnakeUI activeSnakeUI;
+    private double musicVolume = 0.5;
+    private double sfxVolume = 0.5;
 
     public GameManager(Stage stage) {
         this.primaryStage = stage;
         this.accountManager = new AccountManager();
         this.highScoreManager = new HighScoreManager();
     }
+
     // Getters
     public AccountManager getAccountManager() {
         return accountManager;
@@ -74,7 +75,7 @@ public class GameManager {
     public void setMusicVolume(double volume) {
         this.musicVolume = volume;
     }
-    
+
     public double getSfxVolume() {
         return sfxVolume;
     }
@@ -85,7 +86,7 @@ public class GameManager {
 
     public void openBlackjackGame() {
         System.out.println("Launching Blackjack Game...");
-        main.java.blackjack.BlackjackUI bj = new main.java.blackjack.BlackjackUI(this);
+        blackjack.BlackjackUI bj = new blackjack.BlackjackUI(this);
 
         BorderPane root = new BorderPane();
         root.setTop(new Toolbar(this).getLayout());
@@ -102,7 +103,7 @@ public class GameManager {
             activeSnakeUI.stopGame();
             activeSnakeUI = null;
         }
-        main.java.snake.SnakeUI snakeUI = new main.java.snake.SnakeUI(this);
+        snake.SnakeUI snakeUI = new snake.SnakeUI(this);
         activeSnakeUI = snakeUI;
 
         BorderPane root = new BorderPane();
@@ -129,8 +130,8 @@ public class GameManager {
 
     public void stopSnakeGame() {
         if (activeSnakeUI != null) {
-            activeSnakeUI.stopGame(); 
-            activeSnakeUI = null; 
+            activeSnakeUI.stopGame();
+            activeSnakeUI = null;
         }
     }
 

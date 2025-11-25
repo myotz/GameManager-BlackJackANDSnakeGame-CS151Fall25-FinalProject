@@ -1,4 +1,4 @@
-package main.java.snake;
+package snake;
 
 import javafx.geometry.Point2D;
 import java.util.LinkedList;

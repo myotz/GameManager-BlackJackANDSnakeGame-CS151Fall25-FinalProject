@@ -1,4 +1,4 @@
-package main.java.snake;
+package snake;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -12,8 +12,8 @@ public class AudioManager {
     private double currentSfxVolume;
 
     public AudioManager(double initialMusicVolume, double initialSfxVolume) {
-        bgPlayer   = createPlayer("/assets/snakemusic.mp3", true);
-        eatPlayer  = createPlayer("/assets/eat.wav", false);
+        bgPlayer = createPlayer("/assets/snakemusic.mp3", true);
+        eatPlayer = createPlayer("/assets/eat.wav", false);
         crashPlayer = createPlayer("/assets/crash.wav", false);
 
         setMusicVolume(initialMusicVolume);
@@ -24,7 +24,8 @@ public class AudioManager {
         try {
             Media m = new Media(getClass().getResource(path).toExternalForm());
             MediaPlayer p = new MediaPlayer(m);
-            if (loop) p.setCycleCount(MediaPlayer.INDEFINITE);
+            if (loop)
+                p.setCycleCount(MediaPlayer.INDEFINITE);
             return p;
         } catch (Exception e) {
             System.out.println("Couldn't load sound " + path + ": " + e.getMessage());
@@ -33,25 +34,29 @@ public class AudioManager {
     }
 
     public void setMusicVolume(double volume) {
-        //max allowed volume is 1.0
+        // max allowed volume is 1.0
         this.currentMusicVolume = Math.max(0.0, Math.min(1.0, volume));
-        if (bgPlayer != null) 
+        if (bgPlayer != null)
             bgPlayer.setVolume(this.currentMusicVolume);
     }
 
     public void setSfxVolume(double volume) {
-        //max allowed volume is 1.0
+        // max allowed volume is 1.0
         this.currentSfxVolume = Math.max(0.0, Math.min(1.0, volume));
-        if (eatPlayer != null) eatPlayer.setVolume(this.currentSfxVolume);
-        if (crashPlayer != null) crashPlayer.setVolume(this.currentSfxVolume);
+        if (eatPlayer != null)
+            eatPlayer.setVolume(this.currentSfxVolume);
+        if (crashPlayer != null)
+            crashPlayer.setVolume(this.currentSfxVolume);
     }
 
     public void playBackground() {
-        if (bgPlayer != null) bgPlayer.play();
+        if (bgPlayer != null)
+            bgPlayer.play();
     }
 
     public void stopBackground() {
-        if (bgPlayer != null) bgPlayer.stop();
+        if (bgPlayer != null)
+            bgPlayer.stop();
     }
 
     public void playEat() {
@@ -63,9 +68,9 @@ public class AudioManager {
     }
 
     private void playOnce(MediaPlayer p) {
-        if (p == null) return;
-        p.stop();          
-        p.play();          
+        if (p == null)
+            return;
+        p.stop();
+        p.play();
     }
 }
-

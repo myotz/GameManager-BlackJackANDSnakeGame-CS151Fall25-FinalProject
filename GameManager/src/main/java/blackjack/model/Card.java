@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 /*enum Rank {
    TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE

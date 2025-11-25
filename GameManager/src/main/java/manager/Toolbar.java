@@ -1,4 +1,4 @@
-package main.java.manager;
+package manager;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

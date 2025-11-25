@@ -1,4 +1,4 @@
-package main.java.manager.models;
+package manager.models;
 
 import java.io.*;
 import java.util.*;
@@ -16,7 +16,8 @@ public class AccountManager {
      */
     public void loadUsers() {
         File file = new File(FILEPATH);
-        //System.out.println("Looking for file: " + new File(FILEPATH).getAbsolutePath());
+        // System.out.println("Looking for file: " + new
+        // File(FILEPATH).getAbsolutePath());
         if (!file.exists()) {
             System.out.println("File not found");
             return;

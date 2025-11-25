@@ -1,5 +1,5 @@
-package test.java.blackjack;
+package blackjack;
 
 public class CardTest {
-    
+
 }

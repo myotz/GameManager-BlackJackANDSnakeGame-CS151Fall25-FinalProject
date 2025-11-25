@@ -1,4 +1,4 @@
-package main.java.manager.models;
+package manager.models;
 
 public class User {
     private String userName;

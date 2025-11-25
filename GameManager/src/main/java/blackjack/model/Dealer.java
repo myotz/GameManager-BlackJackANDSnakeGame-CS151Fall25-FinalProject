@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 public class Dealer extends Player {
 

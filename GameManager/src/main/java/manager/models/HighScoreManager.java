@@ -1,4 +1,4 @@
-package main.java.manager.models;
+package manager.models;
 
 import java.io.*;
 import java.util.*;

@@ -1,4 +1,4 @@
-package main.java.blackjack.model;
+package blackjack.model;
 
 public enum Suit {
     HEARTS("H"), DIAMONDS("D"), CLUBS("C"), SPADES("S");
