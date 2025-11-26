@@ -255,10 +255,7 @@ public class SnakeUI extends BorderPane {
                 } 
                 //image
                 if (segmentImage != null) {
-                    gc.drawImage(segmentImage, 
-                                current.getX() * cellSize, 
-                                current.getY() * cellSize, 
-                                cellSize, cellSize);
+                    gc.drawImage(segmentImage, current.getX() * cellSize, current.getY() * cellSize, cellSize, cellSize);
                 }
             }
             //head
@@ -271,10 +268,7 @@ public class SnakeUI extends BorderPane {
                 case RIGHT -> headRightImage;
             };
             if (headImage != null) {
-                gc.drawImage(headImage, 
-                            head.getX() * cellSize, 
-                            head.getY() * cellSize, 
-                            cellSize, cellSize);
+                gc.drawImage(headImage, head.getX() * cellSize,  head.getY() * cellSize, cellSize, cellSize);
             }
         }
 
@@ -302,17 +296,6 @@ public class SnakeUI extends BorderPane {
                             cellSize, cellSize);
             }
         }
-
-
-        // gc.setFill(Color.RED);
-        // Point2D food = game.getFood().getPosition();
-        // gc.fillOval(food.getX() * cellSize, food.getY() * cellSize, cellSize, cellSize);
-
-        // gc.setFill(Color.LIGHTCYAN);
-        // for (Point2D p : game.getSnake().getBody()) {
-        //     gc.fillRect(p.getX() * cellSize, p.getY() * cellSize, cellSize - 1, cellSize - 1);
-        // }
-
 
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(18));
