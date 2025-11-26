@@ -3,20 +3,22 @@ package snake;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import manager.GameManager;
 import manager.models.HighScoreManager;
 import manager.models.User;
 import javafx.scene.image.Image;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.StackPane;
 
 public class SnakeUI extends BorderPane {
     private final int cellSize = 20;
@@ -34,7 +36,7 @@ public class SnakeUI extends BorderPane {
 
     private final HighScoreManager highScoreManager;
     private final User currentUser;
-    private final AudioManager audio;
+    private final AudioManager audio = new AudioManager();
 
     private Direction pendingDirection = null;
     private boolean firstInput = true;
@@ -50,9 +52,8 @@ public class SnakeUI extends BorderPane {
         this.game = new SnakeGame(gridWidth, gridHeight);
         this.canvas = new Canvas(gridWidth * cellSize, gridHeight * cellSize);
         this.timeline = new Timeline();
-        
-        audio = new AudioManager(gameManager.getMusicVolume(), gameManager.getSfxVolume());
-        
+
+        audio.playBackground();
 
         try {
             backgroundImage = new Image(getClass().getResource("/assets/snakebackground.jpg").toExternalForm());
@@ -84,7 +85,9 @@ public class SnakeUI extends BorderPane {
         StackPane stackPane = new StackPane(canvas, gameTextBox);
         stackPane.setAlignment(Pos.CENTER);
         setCenter(stackPane);
+
         render();
+        // timeline.pause();
     }
 
     private void handleKey(KeyEvent e) {
@@ -121,7 +124,7 @@ public class SnakeUI extends BorderPane {
             game.getSnake().setDirection(newDir);
             timeline.play();
             firstInput = false;
-            e.consume();
+            // e.consume();
             return;
         }
 
@@ -133,16 +136,15 @@ public class SnakeUI extends BorderPane {
 
         if (ok)
             pendingDirection = newDir;
-        e.consume();
+        // e.consume();
     }
 
     private void render() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        final double CANVAS_WIDTH = canvas.getWidth();
         if (backgroundImage != null) {
             gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
         } else {
-            gc.setFill(Color.BLACK); 
+            gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         }
 
@@ -191,6 +193,7 @@ public class SnakeUI extends BorderPane {
             case "PAUSED" -> {
                 gameTextBox.setVisible(true);
                 messageLabel.setText("GAME PAUSED");
+                subMessageLabel.setText("");
                 scoreLabel.setText("");
             }
 
@@ -198,12 +201,13 @@ public class SnakeUI extends BorderPane {
         }
     }
 
-    //helps center texts based on its length and the size of the screen
-    private double calculateTextWidth(String text, Font font) {
-        javafx.scene.text.Text tempText = new javafx.scene.text.Text(text);
-        tempText.setFont(font);
-        //returning the measured width of text
-        return tempText.getBoundsInLocal().getWidth();
+    public void pauseGame() {
+        if (timeline != null && timeline.getStatus() == Timeline.Status.RUNNING) {
+            timeline.pause();
+            audio.stopBackground();
+            gamePaused = true;
+            render();
+        }
     }
 
     public void stopGame() {
@@ -212,15 +216,6 @@ public class SnakeUI extends BorderPane {
         }
         audio.stopBackground();
         gamePaused = true;
-    }
-    
-    public void pauseGame() {
-        if (timeline != null && timeline.getStatus() == Timeline.Status.RUNNING) {
-            timeline.pause();
-            audio.stopBackground();
-            gamePaused = true;
-            render();
-        }
     }
 
     public void resumeGame() {
@@ -235,7 +230,7 @@ public class SnakeUI extends BorderPane {
     private void restartGame() {
         System.out.println("Restarting Snake Game...");
         game.resetGame();
-        timeline.setRate(1.0);
+        timeline.setRate(1.0); // restore to default snake speed
         timeline.stop();
         timeline.playFromStart();
         // restart music and redraw
@@ -243,7 +238,7 @@ public class SnakeUI extends BorderPane {
         render();
     }
 
-    //Increase speed every time score hits a multiple of 50
+    // Increase speed every time score hits a multiple of 50
     private void adjustSpeed() {
         if (game.getScore() % 50 == 0) {
             double currentSpeed = timeline.getRate();
@@ -260,7 +255,7 @@ public class SnakeUI extends BorderPane {
             pendingDirection = null;
         }
 
-        int prevScore = game.getScore();
+        int prevScore = game.getScore(); // starts with zero
         game.update();
         render();
 
