@@ -63,43 +63,8 @@ public class MainMenu {
         playSnake.setOnAction(e -> gameManager.openSnakeGame());
         logout.setOnAction(e -> gameManager.logout());
 
-        //volume box
-        VBox settingsBox = new VBox(15);
-        settingsBox.setAlignment(Pos.CENTER_LEFT);
-        
-        //slider + initalizing vol
-        Label musicVolumeLabel = new Label("Snake Music Volume:");
-        musicVolumeLabel.setFont(Font.font(14));
-        Slider musicVolumeSlider = new Slider(0.0, 1.0, gameManager.getMusicVolume()); 
-        musicVolumeSlider.setShowTickMarks(true);
-        musicVolumeSlider.setShowTickLabels(true);
-        musicVolumeSlider.setPrefWidth(150);
-        
-        ////whenever slider is changed, update the actual vol value
-        musicVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            gameManager.setMusicVolume(newVal.doubleValue()); 
-        });
-        
-        Label sfxVolumeLabel = new Label("Snake SFX Volume:");
-        sfxVolumeLabel.setFont(Font.font(14));
-        Slider sfxVolumeSlider = new Slider(0.0, 1.0, gameManager.getSfxVolume()); 
-        sfxVolumeSlider.setShowTickMarks(true);
-        sfxVolumeSlider.setShowTickLabels(true);
-        sfxVolumeSlider.setPrefWidth(150);
 
-        sfxVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            gameManager.setSfxVolume(newVal.doubleValue()); 
-        });
-        //add both sets of controls to the settings box
-        settingsBox.getChildren().addAll(
-            musicVolumeLabel, 
-            musicVolumeSlider, 
-            new Separator(), 
-            sfxVolumeLabel, 
-            sfxVolumeSlider
-        );
-
-        gameButtons.getChildren().addAll(welcome, playBJ, playSnake, settingsBox, logout);
+        gameButtons.getChildren().addAll(welcome, playBJ, playSnake, logout);
 
         hbox.getChildren().addAll(scoresBox, new Separator(), gameButtons);
     }
