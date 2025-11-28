@@ -11,6 +11,14 @@ public class HighScoreManager {
         loadScore();
     }
 
+    // if user does NOT exist, assign default scores
+    public void createDefaultScores(String username) {
+        if (!highScores.containsKey(username)) {
+            highScores.put(username, new int[] { 1000, 1000 });
+            saveScores();
+        }
+    }
+
     private void loadScore() {
         File file = new File(FILEPATH);
         if (!file.exists()) {
@@ -37,10 +45,10 @@ public class HighScoreManager {
     }
 
     public void updateScore(String username, Integer blackjackScore, Integer snakeScore) {
-        int[] current = highScores.getOrDefault(username, new int[] { 0, 0 });
+        int[] current = highScores.getOrDefault(username, new int[] { 1000, 1000 });
 
         int newBlackjack = (blackjackScore != null)
-                ? Math.max(current[0], blackjackScore)
+                ? blackjackScore // always use the real time balance not max unlike snake
                 : current[0];
 
         int newSnake = (snakeScore != null)
@@ -90,13 +98,11 @@ public class HighScoreManager {
     }
 
     public int getBlackjackScore(String username) {
-        int[] scores = highScores.getOrDefault(username, new int[] { 0, 0 });
-        return scores[0];
+        return highScores.getOrDefault(username, new int[] { 1000, 1000 })[0];
     }
 
     public int getSnakeScore(String username) {
-        int[] scores = highScores.getOrDefault(username, new int[] { 0, 0 });
-        return scores[1];
+        return highScores.getOrDefault(username, new int[] { 1000, 1000 })[1];
     }
 
 }
