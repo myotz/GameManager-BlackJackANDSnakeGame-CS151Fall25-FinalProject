@@ -26,6 +26,7 @@ public class BlackjackGame {
         state.bot2 = new Bot("Bot 2", 1000, 14);
         state.dealer = new Dealer();
         sound = new SoundManager(0.5, 0.85);
+        sound.playBackground();
     }
 
     public void setListener(Listener listener) {
@@ -60,8 +61,8 @@ public class BlackjackGame {
         state.turnIndex = 0;
         state.revealDealerHole = false;
         state.message = "Started new round. Place your bet!";
-        sound.stopBackground();
-        sound.playBackground();
+        //sound.stopBackground();
+        //sound.playBackground();
         notifyChange(state.message);
     }
 
