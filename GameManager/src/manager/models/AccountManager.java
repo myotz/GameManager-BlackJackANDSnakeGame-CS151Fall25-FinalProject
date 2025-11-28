@@ -3,11 +3,17 @@ package manager.models;
 import java.io.*;
 import java.util.*;
 
+import manager.GameManager;
+import utils.CryptoUtils;
+
 public class AccountManager {
     private static final String FILEPATH = "data/accounts.txt";
     private Map<String, User> users = new HashMap<>();
+    private GameManager gameManager;
 
-    public AccountManager() {
+
+    public AccountManager(GameManager gameManager) {
+        this.gameManager = gameManager;
         loadUsers();
     }
 
@@ -16,7 +22,8 @@ public class AccountManager {
      */
     public void loadUsers() {
         File file = new File(FILEPATH);
-        //System.out.println("Looking for file: " + new File(FILEPATH).getAbsolutePath());
+        // System.out.println("Looking for file: " + new
+        // File(FILEPATH).getAbsolutePath());
         if (!file.exists()) {
             System.out.println("File not found");
             return;
@@ -29,11 +36,11 @@ public class AccountManager {
 
                 String[] parts = line.split(",");
                 if (parts.length == 4) {
-                    String username = parts[0];
-                    String password = parts[1];
-                    String profile = parts[2];
-                    String securityQuestion = parts[3];
-                    users.put(username, new User(username, password, profile, securityQuestion));
+                    String username = CryptoUtils.decrypt(parts[0]);
+                    String password = CryptoUtils.decrypt(parts[1]);
+                    String profile = CryptoUtils.decrypt(parts[2]);
+                    String question = CryptoUtils.decrypt(parts[3]);
+                    users.put(username, new User(username, password, profile, question));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -49,6 +56,7 @@ public class AccountManager {
         User user = new User(userName, password, profileName, securityQuestion);
         users.put(userName, user);
         saveUsers();
+        gameManager.getHighScoreManager().createDefaultScores(userName);
         return true;
     }
 
@@ -80,8 +88,11 @@ public class AccountManager {
         }
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILEPATH))) {
             for (User user : users.values()) {
-                pw.println(user.getUserName() + "," + user.getPassword()
-                        + "," + user.getProfileName() + "," + user.getSecurityAnswer());
+                pw.println(
+                        CryptoUtils.encrypt(user.getUserName()) + "," +
+                                CryptoUtils.encrypt(user.getPassword()) + "," +
+                                CryptoUtils.encrypt(user.getProfileName()) + "," +
+                                CryptoUtils.encrypt(user.getSecurityAnswer()));
             }
         } catch (IOException e) {
             e.printStackTrace();
