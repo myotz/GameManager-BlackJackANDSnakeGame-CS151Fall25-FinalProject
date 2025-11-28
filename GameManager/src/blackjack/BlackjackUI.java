@@ -166,7 +166,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         return box;
     }
 
-    //Save state
+    // Save state
     private void saveGame() {
         String save = game.save();
         TextArea area = new TextArea(save);
@@ -180,7 +180,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         dlg.showAndWait();
     }
 
-    //load state
+    // load state
     private void loadGame() {
         TextArea area = new TextArea();
         area.setWrapText(true);
@@ -214,7 +214,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         int bot1Change = state.bot1.getMoney() - game.getStartBot1Money();
         int bot2Change = state.bot2.getMoney() - game.getStartBot2Money();
 
-        //to fix the substract issue for human
+        // to fix the substract issue for human
         int humanBet = game.getLastHumanBet();
         if (humanOutcome == GameLogic.Outcome.LOSE && humanChange == 0) {
             humanChange = -humanBet; // subtract the actual bet
@@ -225,8 +225,8 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         // Human
         switch (humanOutcome) {
             case WIN -> result.append(CurUser.getUserName())
-                .append(" won $").append(Math.abs(humanChange / 2))
-                .append(" | ");
+                    .append(" won $").append(Math.abs(humanChange / 2))
+                    .append(" | ");
             case LOSE -> result.append(CurUser.getUserName())
                     .append(" lost $").append(Math.abs(humanBet)).append(" | ");
             case PUSH -> result.append(CurUser.getUserName())
@@ -253,7 +253,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
 
         state.message = result.toString();
 
-        // Update UI money values 
+        // Update UI money values
         humanMoney.setText("$" + state.human.getMoney());
         bot1Money.setText("$" + state.bot1.getMoney());
         bot2Money.setText("$" + state.bot2.getMoney());
@@ -328,4 +328,11 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
             box.getChildren().add(CardImage.createCardImage("back", true));
         }
     }
+
+    public void stopGame() {
+        if (game != null && game.getSound() != null) {
+            game.getSound().stopBackground();
+        }
+    }
+
 }
