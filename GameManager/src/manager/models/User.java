@@ -12,8 +12,8 @@ public class User {
     public User() {
         this.userName = null;
         this.password = null;
-        this.blackjackHighScore = 0;
-        this.snakeHighScore = 0;
+        this.blackjackHighScore = 1000;
+        this.snakeHighScore = 1000;
         this.profileName = null;
         this.securityQuestion = null;
     }
@@ -33,8 +33,8 @@ public class User {
     public User(String userName, String password, String profileName, String securityQuestion) {
         this.userName = userName;
         this.password = password;
-        this.blackjackHighScore = 0;
-        this.snakeHighScore = 0;
+        this.blackjackHighScore = 1000;
+        this.snakeHighScore = 1000;
         this.profileName = profileName;
         this.securityQuestion = securityQuestion;
     }
