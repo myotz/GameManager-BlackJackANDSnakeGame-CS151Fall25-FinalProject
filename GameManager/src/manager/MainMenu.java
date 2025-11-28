@@ -18,7 +18,7 @@ public class MainMenu {
 
     public MainMenu(GameManager gameManager, HighScoreManager highScoreManager, User curUser) {
         root = new BorderPane();
-        root.setStyle("-fx-background-color: #bad137e7;");
+        root.setStyle("-fx-background-color: #18a52fc1;");
 
         VBox scoreSection = createScoreSection(highScoreManager);
         root.setCenter(scoreSection);
