@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
@@ -67,7 +68,15 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         buildTablePane();
 
         setCenter(menuPane);
-        setStyle("-fx-background-color: #098109e7;");
+        BackgroundImage neonBg = new BackgroundImage(
+                new Image(getClass().getResource("/assets/blackjack.jpg").toExternalForm(),
+                        1920, 1080, false, true),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                BackgroundSize.DEFAULT);
+
+        setBackground(new Background(neonBg));
 
     }
 
@@ -95,9 +104,14 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         tablePane.setPadding(new Insets(10));
         tablePane.setAlignment(Pos.TOP_CENTER);
 
-        phaseLabel.setFont(Font.font(16));
-        turnLabel.setFont(Font.font(16));
-        msgLabel.setFont(Font.font(14));
+        phaseLabel.setFont(Font.font(18));
+        phaseLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+        turnLabel.setFont(Font.font(18));
+        turnLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+        msgLabel.setFont(Font.font(18));
+        msgLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
         // Player rows
         VBox rows = new VBox(10);
