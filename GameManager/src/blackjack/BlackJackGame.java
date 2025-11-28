@@ -2,7 +2,7 @@ package blackjack;
 
 import blackjack.model.*;
 
-public class BlackJackGame {
+public class BlackjackGame {
 
     public interface Listener {
         void onStateChanged(GameState state, String message);
@@ -14,7 +14,12 @@ public class BlackJackGame {
     private Listener listener;
     private final SoundManager sound;
 
-    public BlackJackGame(String username, int startingMoney) {
+    private int startHumanMoney;
+    private int startBot1Money;
+    private int startBot2Money;
+    private int lastHumanBet;
+
+    public BlackjackGame(String username, int startingMoney) {
         state = new GameState(username, startingMoney);
         // state.human = new Player(username, startingMoney);
         state.bot1 = new Bot("Bot 1", 1000, 16);
@@ -32,20 +37,43 @@ public class BlackJackGame {
         return state;
     }
 
+    public int getStartHumanMoney() {
+        return startHumanMoney;
+    }
+
+    public int getStartBot1Money() {
+        return startBot1Money;
+    }
+
+    public int getStartBot2Money() {
+        return startBot2Money;
+    }
+
+    public int getLastHumanBet() {
+        return lastHumanBet;
+    }
+
     public void newGame(String username, int money) {
         state.resetRound();
-        //state = new GameState(username, money);
+        // state = new GameState(username, money);
         state.phase = GameState.Phase.BETTING;
         state.turnIndex = 0;
         state.revealDealerHole = false;
         state.message = "Started new round. Place your bet!";
-        notifyChange(state.message);
+        sound.stopBackground();
         sound.playBackground();
+        notifyChange(state.message);
     }
 
     public void startRoundIfReady() {
         if (state.phase != GameState.Phase.BETTING)
             return;
+
+        sound.playDrawCard();
+        // Save starting money for this round
+        startHumanMoney = state.human.getMoney();
+        startBot1Money = state.bot1.getMoney();
+        startBot2Money = state.bot2.getMoney();
 
         if (state.bot1.getBet() == 0)
             state.bot1.playBet(Math.min(25, state.bot1.getMoney()));
@@ -70,7 +98,7 @@ public class BlackJackGame {
         for (int i = 0; i < 2; i++) {
             for (Player p : state.turnOrder()) {
                 p.add(state.deck.dealCard());
-                sound.playDrawCard();
+                // sound.playDrawCard();
             }
         }
     }
@@ -109,11 +137,12 @@ public class BlackJackGame {
     public void humanHit() {
         if (!isHumansTurn())
             return;
+
         state.human.add(state.deck.dealCard());
         sound.playDrawCard();
+
         if (state.human.isBust()) {
             state.message = "Human busts!";
-            sound.playDealerWin(); 
             nextTurn();
         } else {
             state.message = "Human hits.";
@@ -162,7 +191,7 @@ public class BlackJackGame {
         // Bot.hit()
         if (!bot.isBust() && bot.hit()) {
             bot.add(state.deck.dealCard());
-            sound.playDrawCard();  
+            sound.playDrawCard();
             state.message = bot.getName() + " hits.";
             if (bot.isBust()) {
                 state.message = bot.getName() + " busts!";
@@ -186,7 +215,7 @@ public class BlackJackGame {
         Dealer d = state.dealer;
         if (!d.isBust() && d.shouldHit()) {
             d.add(state.deck.dealCard());
-            sound.playDrawCard(); 
+            sound.playDrawCard();
             state.message = "Dealer hits.";
             if (d.isBust()) {
                 state.message = "Dealer busts!";
@@ -204,6 +233,7 @@ public class BlackJackGame {
         state.turnIndex = (state.turnIndex + 1) % 4;
 
         if (state.turnIndex == 0) {
+            lastHumanBet = state.human.getBet();
             settleRound();
         }
     }
@@ -220,8 +250,7 @@ public class BlackJackGame {
                 javafx.util.Duration.seconds(0.8));
         pause.setOnFinished(e -> {
             Player dealer = state.dealer;
-            
-            boolean humanSoundPlayed = false;
+
             // Determine outcome for each player
             for (Player p : new Player[] { state.human, state.bot1, state.bot2 }) {
                 GameLogic.Outcome out = GameLogic.compare(p, dealer);
@@ -229,23 +258,20 @@ public class BlackJackGame {
                 switch (out) {
                     case WIN -> {
                         p.winBet();
-                        if(!humanSoundPlayed && p == state.human) {
+                        if (p == state.human)
                             sound.playPlayerWin();
-                            humanSoundPlayed = true;
-                        }
-                        //System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
+                        // System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
                     }
                     case PUSH -> {
-                        p.pushBet(); 
-                        //System.out.println(p.getName() + " pushes. New balance: " + p.getMoney());
+                        p.pushBet();
+                        sound.playDealerWin();
+                        // System.out.println(p.getName() + " pushes. New balance: " + p.getMoney());
                     }
                     case LOSE -> {
-                        p.loseBet(); 
-                        if (!humanSoundPlayed && p == state.human) {
-                            sound.playDealerWin(); 
-                            humanSoundPlayed = true;
-                        }
-                        //System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
+                        p.loseBet();
+                        if (p == state.human)
+                            sound.playDealerWin();
+                        // System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
                     }
                 }
             }
@@ -257,7 +283,7 @@ public class BlackJackGame {
 
             if (listener != null) {
                 listener.onRoundEnded(state, null);
-                //listener.onStateChanged(state, "Round updated.");
+                // listener.onStateChanged(state, "Round updated.");
             }
         });
 
@@ -269,9 +295,8 @@ public class BlackJackGame {
         if (listener != null) {
             listener.onStateChanged(state, "Started new round. Place your bet!");
         }
-        sound.playBackground();
     }
-    
+
     // Save / Load
 
     public String save() {
@@ -293,6 +318,9 @@ public class BlackJackGame {
             }
 
             notifyChange("Game loaded.");
+            if (sound != null) {
+                sound.playBackground();
+            }
 
             // Resume the correct turn
             if (state.phase == GameState.Phase.DEAL) {
@@ -320,4 +348,9 @@ public class BlackJackGame {
             runAutoTurnsIfNeeded();
         }
     }
+
+    public SoundManager getSound() {
+        return sound;
+    }
+
 }
