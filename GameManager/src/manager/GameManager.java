@@ -16,14 +16,16 @@ public class GameManager {
     private User currentUser;
     private boolean gamePaused = false;
     private snake.SnakeUI activeSnakeUI;
-    private double musicVolume = 0.5; 
-    private double sfxVolume = 0.5; 
+    private blackjack.BlackjackUI activeblackjackUI;
+    private double musicVolume = 0.5;
+    private double sfxVolume = 0.5;
 
     public GameManager(Stage stage) {
         this.primaryStage = stage;
-        this.accountManager = new AccountManager();
+        this.accountManager = new AccountManager(this);
         this.highScoreManager = new HighScoreManager();
     }
+
     // Getters
     public AccountManager getAccountManager() {
         return accountManager;
@@ -39,6 +41,34 @@ public class GameManager {
 
     public void setCurrentUser(User user) {
         this.currentUser = user;
+    }
+
+    public double getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(double volume) {
+        this.musicVolume = volume;
+
+        if (activeSnakeUI != null)
+            activeSnakeUI.updateVolumes(volume, sfxVolume);
+
+        if (activeblackjackUI != null)
+            activeblackjackUI.updateVolumes(volume, sfxVolume);
+    }
+
+    public double getSfxVolume() {
+        return sfxVolume;
+    }
+
+    public void setSfxVolume(double volume) {
+        this.sfxVolume = volume;
+
+        if (activeSnakeUI != null)
+            activeSnakeUI.updateVolumes(musicVolume, volume);
+
+        if (activeblackjackUI != null)
+            activeblackjackUI.updateVolumes(musicVolume, volume);
     }
 
     public void showLoginScreen() {
@@ -67,31 +97,19 @@ public class GameManager {
         showLoginScreen();
     }
 
-    public double getMusicVolume() {
-        return musicVolume;
-    }
-
-    public void setMusicVolume(double volume) {
-        this.musicVolume = volume;
-    }
-    
-    public double getSfxVolume() {
-        return sfxVolume;
-    }
-
-    public void setSfxVolume(double volume) {
-        this.sfxVolume = volume;
-    }
-
     public void openBlackjackGame() {
         System.out.println("Launching Blackjack Game...");
+        if (activeblackjackUI != null) {
+            activeblackjackUI.stopGame();
+            activeblackjackUI = null;
+        }
         blackjack.BlackjackUI bj = new blackjack.BlackjackUI(this);
-
+        activeblackjackUI = bj;
         BorderPane root = new BorderPane();
         root.setTop(new Toolbar(this).getLayout());
         root.setCenter(bj);
 
-        Scene scene = new Scene(root, 1000, 700);
+        Scene scene = new Scene(root, 1200, 900);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Blackjack");
     }
@@ -129,8 +147,15 @@ public class GameManager {
 
     public void stopSnakeGame() {
         if (activeSnakeUI != null) {
-            activeSnakeUI.stopGame(); 
-            activeSnakeUI = null; 
+            activeSnakeUI.stopGame();
+            activeSnakeUI = null;
+        }
+    }
+
+    public void stopBlackjackGame() {
+        if (activeblackjackUI != null) {
+            activeblackjackUI.stopGame();
+            activeblackjackUI = null;
         }
     }
 
