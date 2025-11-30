@@ -97,6 +97,7 @@ public class MainMenu {
         VBox vbox = new VBox(30);
         Button playBtn = new Button("Play Mario");
         Button logoutBtn = new Button("Log out");
+        logoutBtn.setOnAction(e -> gameManager.logout());
         vbox.getChildren().addAll(playBtn, logoutBtn);
 
         HBox hbox = new HBox(80, blackjackCard, snakeCard, vbox);
