@@ -1,7 +1,6 @@
 package snake;
 
 import java.util.List;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -53,7 +52,7 @@ public class SnakeUI extends BorderPane {
     private Image bodyTopLeftImage;
     private Image bodyBottomRightImage;
     private Image bodyBottomLeftImage;
-    private Image headUpImage; 
+    private Image headUpImage;
     private Image headDownImage;
     private Image headLeftImage;
     private Image headRightImage;
@@ -72,27 +71,25 @@ public class SnakeUI extends BorderPane {
         this.timeline = new Timeline();
 
         audio = new AudioManager(gameManager.getMusicVolume(), gameManager.getSfxVolume());
+        audio.playBackground();
 
         try {
             backgroundImage = new Image(getClass().getResource("/assets/snakebackground.jpg").toExternalForm());
-
             headUpImage = new Image(getClass().getResource("/assets/head_up.png").toExternalForm());
             headDownImage = new Image(getClass().getResource("/assets/head_down.png").toExternalForm());
             headLeftImage = new Image(getClass().getResource("/assets/head_left.png").toExternalForm());
             headRightImage = new Image(getClass().getResource("/assets/head_right.png").toExternalForm());
-
-            snakeBodyHorizontalImage = new Image(getClass().getResource("/assets/body_horizontal.png").toExternalForm());
+            snakeBodyHorizontalImage = new Image(
+                    getClass().getResource("/assets/body_horizontal.png").toExternalForm());
             snakeBodyVerticalImage = new Image(getClass().getResource("/assets/body_vertical.png").toExternalForm());
             bodyTopRightImage = new Image(getClass().getResource("/assets/body_topright.png").toExternalForm());
             bodyTopLeftImage = new Image(getClass().getResource("/assets/body_topleft.png").toExternalForm());
             bodyBottomRightImage = new Image(getClass().getResource("/assets/body_bottomright.png").toExternalForm());
             bodyBottomLeftImage = new Image(getClass().getResource("/assets/body_bottomleft.png").toExternalForm());
-
             tailUpImage = new Image(getClass().getResource("/assets/tail_up.png").toExternalForm());
             tailDownImage = new Image(getClass().getResource("/assets/tail_down.png").toExternalForm());
             tailLeftImage = new Image(getClass().getResource("/assets/tail_left.png").toExternalForm());
             tailRightImage = new Image(getClass().getResource("/assets/tail_right.png").toExternalForm());
-
             foodImage = new Image(getClass().getResource("/assets/apple.png").toExternalForm());
         } catch (Exception e) {
             System.out.println("Could not load background image: " + e.getMessage());
@@ -195,26 +192,29 @@ public class SnakeUI extends BorderPane {
             gc.strokeLine(0, y * cellSize, gridWidth * cellSize, y * cellSize);
         }
 
-        //apple
+        // gc.setFill(Color.RED);
+
+        // apple
         Point2D food = game.getFood().getPosition();
         if (foodImage != null) {
-            gc.drawImage(foodImage, 
-                        food.getX() * cellSize, 
-                        food.getY() * cellSize, 
-                        cellSize, cellSize);
-        } else { //if drawing fails
+            double appleSize = cellSize + 10;
+            double offset = (appleSize - cellSize) / 2;
+
+            gc.drawImage(foodImage,
+                    food.getX() * cellSize - offset,
+                    food.getY() * cellSize - offset,
+                    appleSize, appleSize);
+        } else { // if drawing fails
             gc.setFill(Color.RED);
             gc.fillOval(food.getX() * cellSize, food.getY() * cellSize, cellSize, cellSize);
         }
 
-        //snake
+        // snake
         List<Point2D> body = game.getSnake().getBody();
-
         if (!body.isEmpty()) {
-            // body and corners
-            for (int i = 1; i < body.size() -1; i++) {
+            for (int i = 1; i < body.size() - 1; i++) {
                 Point2D current = body.get(i);
-                Point2D prev = body.get(i - 1); 
+                Point2D prev = body.get(i - 1);
                 Point2D next;
                 if (i + 1 < body.size()) {
                     next = body.get(i + 1);
@@ -224,41 +224,50 @@ public class SnakeUI extends BorderPane {
 
                 Image segmentImage = null;
                 if (next == null || prev.getX() == next.getX()) {
-                    //vertical segment
+                    // vertical segment
                     segmentImage = snakeBodyVerticalImage;
                 } else if (next == null || prev.getY() == next.getY()) {
-                    //horizontal segment
+                    // horizontal segment
                     segmentImage = snakeBodyHorizontalImage;
-                } 
-                //corners
+                }
+
+                // corners
                 else {
-                    //moving from up to left or right to down
-                    if (prev.getX() < current.getX() && next.getY() > current.getY() || 
-                        prev.getY() > current.getY() && next.getX() < current.getX()) {  
+                    // moving from up to left or right to down
+                    if (prev.getX() < current.getX() && next.getY() > current.getY() ||
+                            prev.getY() > current.getY() && next.getX() < current.getX()) {
                         segmentImage = bodyBottomLeftImage;
                     }
-                    //mving from up to right or left to down
-                    else if (prev.getX() > current.getX() && next.getY() > current.getY() || 
-                            prev.getY() > current.getY() && next.getX() > current.getX()) {  
+
+                    // mving from up to right or left to down
+                    else if (prev.getX() > current.getX() && next.getY() > current.getY() ||
+                            prev.getY() > current.getY() && next.getX() > current.getX()) {
                         segmentImage = bodyBottomRightImage;
                     }
-                    //moving from down to left or right to up
-                    else if (prev.getX() < current.getX() && next.getY() < current.getY() || 
-                            prev.getY() < current.getY() && next.getX() < current.getX()) {  
+
+                    // moving from down to left or right to up
+                    else if (prev.getX() < current.getX() && next.getY() < current.getY() ||
+                            prev.getY() < current.getY() && next.getX() < current.getX()) {
                         segmentImage = bodyTopLeftImage;
                     }
-                    //moving from down to right or left to up :(? is this right omg
-                    else if (prev.getX() > current.getX() && next.getY() < current.getY() || 
-                            prev.getY() < current.getY() && next.getX() > current.getX()) {  
+
+                    // moving from down to right or left to up :(? is this right omg
+                    else if (prev.getX() > current.getX() && next.getY() < current.getY() ||
+                            prev.getY() < current.getY() && next.getX() > current.getX()) {
                         segmentImage = bodyTopRightImage;
                     }
-                } 
-                //image
+                }
+
+                // image
                 if (segmentImage != null) {
-                    gc.drawImage(segmentImage, current.getX() * cellSize, current.getY() * cellSize, cellSize, cellSize);
+                    gc.drawImage(segmentImage,
+                            current.getX() * cellSize,
+                            current.getY() * cellSize,
+                            cellSize, cellSize);
                 }
             }
-            //head
+
+            // head
             Point2D head = body.get(0);
             Direction direction = game.getSnake().getDirection();
             Image headImage = switch (direction) {
@@ -267,19 +276,22 @@ public class SnakeUI extends BorderPane {
                 case LEFT -> headLeftImage;
                 case RIGHT -> headRightImage;
             };
+
             if (headImage != null) {
-                gc.drawImage(headImage, head.getX() * cellSize,  head.getY() * cellSize, cellSize, cellSize);
+                gc.drawImage(headImage,
+                        head.getX() * cellSize,
+                        head.getY() * cellSize,
+                        cellSize, cellSize);
             }
         }
 
-        //tail
+        // tail
         if (body.size() > 1) {
-            Point2D tail = body.get(body.size() - 1); //last slot - tail
-            Point2D prev = body.get(body.size() - 2); //slot before the tail
-            
+            Point2D tail = body.get(body.size() - 1); // last slot - tail
+            Point2D prev = body.get(body.size() - 2); // slot before the tail
             Image tailImage = null;
 
-            //direction the tail
+            // direction the tail
             if (tail.getX() < prev.getX()) {
                 tailImage = tailLeftImage;
             } else if (tail.getX() > prev.getX()) {
@@ -289,14 +301,14 @@ public class SnakeUI extends BorderPane {
             } else if (tail.getY() > prev.getY()) {
                 tailImage = tailDownImage;
             }
+
             if (tailImage != null) {
-                gc.drawImage(tailImage, 
-                            tail.getX() * cellSize, 
-                            tail.getY() * cellSize, 
-                            cellSize, cellSize);
+                gc.drawImage(tailImage,
+                        tail.getX() * cellSize,
+                        tail.getY() * cellSize,
+                        cellSize, cellSize);
             }
         }
-
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(18));
         highestSnakeScore = highScoreManager.getSnakeScore(currentUser.getUserName());
@@ -368,9 +380,9 @@ public class SnakeUI extends BorderPane {
         render();
     }
 
-    // Increase speed every time score hits a multiple of 50
+    // Increase speed every time score hits a multiple of 1000
     private void adjustSpeed() {
-        if (game.getScore() % 50 == 0) {
+        if (game.getScore() % 1000 == 0) {
             double currentSpeed = timeline.getRate();
             double newSpeed = Math.min(currentSpeed + 0.5, 3.0); // don't go below 50ms
             System.out.println("Speed increased! New frame time: " + newSpeed + " ms");
@@ -410,4 +422,8 @@ public class SnakeUI extends BorderPane {
         return "RUNNING";
     }
 
+    public void updateVolumes(double musicVol, double sfxVol) {
+        audio.setMusicVolume(musicVol);
+        audio.setSfxVolume(sfxVol);
+    }
 }
