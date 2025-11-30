@@ -70,7 +70,7 @@ public class SnakeGame {
         if (newHead.equals(food.getPosition())) {
             snake.grow(newHead);
             food.spawn(width, height);
-            score += 10;
+            score += 200;
         } else {
             snake.move(newHead);
         }
