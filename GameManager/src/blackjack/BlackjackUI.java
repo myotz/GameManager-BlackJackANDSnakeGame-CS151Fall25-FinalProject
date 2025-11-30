@@ -15,6 +15,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
     private final User CurUser;
     private final BlackjackGame game;
     private final GameManager gameManager;
+    private final SoundManager sound;
 
     // Main menu nodes
     private final VBox menuPane = new VBox(12);
@@ -61,6 +62,12 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         this.game = new BlackjackGame(CurUser.getUserName(), savedMoney);
 
         this.game.setListener(this);
+
+        this.sound = new SoundManager(
+                manager.getMusicVolume(),
+                manager.getSfxVolume());
+
+        sound.playBackground();
 
         setPadding(new Insets(10));
 
@@ -132,8 +139,15 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         saveLoad.setAlignment(Pos.CENTER);
 
         // actions
-        hitBtn.setOnAction(e -> game.humanHit());
-        standBtn.setOnAction(e -> game.humanStand());
+        hitBtn.setOnAction(e -> {
+            sound.playDrawCard();
+            game.humanHit();
+        });
+
+        standBtn.setOnAction(e -> {
+            sound.playDrawCard();
+            game.humanStand();
+        });
 
         bet1.setOnAction(e -> game.humanBetAdd(1));
         bet5.setOnAction(e -> game.humanBetAdd(5));
@@ -145,6 +159,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
                 Alert a = new Alert(Alert.AlertType.WARNING, "Please place a bet before dealing!", ButtonType.OK);
                 a.showAndWait();
             } else {
+                sound.playDrawCard();
                 game.startRoundIfReady();
             }
         });
@@ -213,6 +228,11 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
 
     @Override
     public void onStateChanged(GameState state, String message) {
+        if (message != null) {
+            if (message.contains("hits")) {
+                sound.playDrawCard();
+            }
+        }
         refresh(state, message);
     }
 
@@ -238,14 +258,25 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
 
         // Human
         switch (humanOutcome) {
-            case WIN -> result.append(CurUser.getUserName())
-                    .append(" won $").append(Math.abs(humanChange / 2))
-                    .append(" | ");
-            case LOSE -> result.append(CurUser.getUserName())
-                    .append(" lost $").append(Math.abs(humanBet)).append(" | ");
-            case PUSH -> result.append(CurUser.getUserName())
-                    .append(" pushed | ");
+            case WIN -> {
+                result.append(CurUser.getUserName())
+                        .append(" won $").append(Math.abs(humanChange / 2))
+                        .append(" | ");
+                sound.playPlayerWin();
+            }
+            case LOSE -> {
+                result.append(CurUser.getUserName())
+                        .append(" lost $").append(Math.abs(humanBet)).append(" | ");
+                sound.playDealerWin();
+            }
+            case PUSH -> {
+                result.append(CurUser.getUserName())
+                        .append(" pushed | ");
+                sound.playDealerWin();
+            }
         }
+
+       
 
         // Bot 1
         switch (bot1Outcome) {
@@ -344,9 +375,12 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
     }
 
     public void stopGame() {
-        if (game != null && game.getSound() != null) {
-            game.getSound().stopBackground();
-        }
+        sound.stopBackground();
+    }
+
+    public void updateVolumes(double musicVol, double sfxVol) {
+        sound.setMusicVolume(musicVol);
+        sound.setSfxVolume(sfxVol);
     }
 
 }
