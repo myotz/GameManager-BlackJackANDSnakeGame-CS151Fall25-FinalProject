@@ -1,9 +1,33 @@
+Compare text
+
+Find the difference between two text files
+Real-time diff
+Unified diff
+Collapse lines
+Highlight change
+Syntax highlighting
+Tools
+Diffchecker Desktop icon
+Diffchecker Desktop The most secure way to run Diffchecker. Get the Diffchecker Desktop app: your diffs never leave your computer!
+Untitled diff
+20 removals
+	
+	
+	
+	
+357 lines
+20 additions
+	
+	
+	
+	
+357 lines
 package blackjack;
 
 import blackjack.model.*;
 import manager.GameManager;
 
-public class BlackJackGame {
+public class BlackjackGame {
 
     public interface Listener {
         void onStateChanged(GameState state, String message);
@@ -13,23 +37,23 @@ public class BlackJackGame {
 
     private GameState state;
     private Listener listener;
-    // private final SoundManager sound;
-    // private final GameManager manager;
+    //private final SoundManager sound;
+    //private final GameManager manager;
 
     private int startHumanMoney;
     private int startBot1Money;
     private int startBot2Money;
     private int lastHumanBet;
 
-    public BlackJackGame(String username, int startingMoney) {
+    public BlackjackGame(String username, int startingMoney) {
         state = new GameState(username, startingMoney);
         // state.human = new Player(username, startingMoney);
         state.bot1 = new Bot("Bot 1", 1000, 16);
         state.bot2 = new Bot("Bot 2", 1000, 14);
         state.dealer = new Dealer();
-        // sound = new SoundManager(manager.getMusicVolume(), manager.getSfxVolume());
+        //sound = new SoundManager(manager.getMusicVolume(), manager.getSfxVolume());
 
-        // sound.playBackground();
+        //sound.playBackground();
     }
 
     public void setListener(Listener listener) {
@@ -64,8 +88,8 @@ public class BlackJackGame {
         state.turnIndex = 0;
         state.revealDealerHole = false;
         state.message = "Started new round. Place your bet!";
-        // sound.stopBackground();
-        // sound.playBackground();
+        //sound.stopBackground();
+        //sound.playBackground();
         notifyChange(state.message);
     }
 
@@ -73,7 +97,7 @@ public class BlackJackGame {
         if (state.phase != GameState.Phase.BETTING)
             return;
 
-        // sound.playDrawCard();
+        //sound.playDrawCard();
         // Save starting money for this round
         startHumanMoney = state.human.getMoney();
         startBot1Money = state.bot1.getMoney();
@@ -143,7 +167,7 @@ public class BlackJackGame {
             return;
 
         state.human.add(state.deck.dealCard());
-        // sound.playDrawCard();
+        //sound.playDrawCard();
 
         if (state.human.isBust()) {
             state.message = "Human busts!";
@@ -195,128 +219,129 @@ public class BlackJackGame {
         // Bot.hit()
         if (!bot.isBust() && bot.hit()) {
             bot.add(state.deck.dealCard());
-            // sound.playDrawCard();
-            state.message = bot.getName() + " hits.";
-            if (bot.isBust()) {
-                state.message = bot.getName() + " busts!";
-                nextTurn();
+            //sound.playDrawCard();
+Saved diffs
+Your saved diffs will appear here.
+undefined icon
+
+Fastest Google Search API. Get results in 0.6s with 100% success. No blocks. No slowdowns. Just speed.
+ads via Carbon
+Original text
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+            if (cardsDealt && state.phase == GameState.Phase.BETTING) {
+                state.phase = GameState.Phase.DEAL;
             }
-        } else {
-            state.message = bot.getName() + " stands.";
-            nextTurn();
-        }
-        notifyChange(state.message);
 
-        // Continue until it's not a bot's turn anymore
-        if (state.turnIndex == 1 || state.turnIndex == 2)
-            return;
-    }
+            notifyChange("Game loaded.");
+            //if (sound != null) {
+                //sound.playBackground();
+            //}
 
-    private void autoDealerTurn() {
-        // Reveal hole at dealer turn start
-        state.revealDealerHole = true;
-
-        Dealer d = state.dealer;
-        if (!d.isBust() && d.shouldHit()) {
-            d.add(state.deck.dealCard());
-            // sound.playDrawCard();
-            state.message = "Dealer hits.";
-            if (d.isBust()) {
-                state.message = "Dealer busts!";
-                nextTurn();
-            }
-        } else {
-            state.message = "Dealer stands.";
-            nextTurn();
-        }
-        notifyChange(state.message);
-    }
-
-    private void nextTurn() {
-        // move to next player if dealer finished
-        state.turnIndex = (state.turnIndex + 1) % 4;
-
-        if (state.turnIndex == 0) {
-            lastHumanBet = state.human.getBet();
-            settleRound();
-        }
-    }
-
-    // Settle
-
-    private void settleRound() {
-        state.phase = GameState.Phase.SETTLE;
-        state.revealDealerHole = true;
-
-        notifyChange("Dealer reveals the hole card...");
-
-        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(
-                javafx.util.Duration.seconds(0.8));
-        pause.setOnFinished(e -> {
-            Player dealer = state.dealer;
-
-            // Determine outcome for each player
-            for (Player p : new Player[] { state.human, state.bot1, state.bot2 }) {
-                GameLogic.Outcome out = GameLogic.compare(p, dealer);
-
-                switch (out) {
-                    case WIN -> {
-                        p.winBet();
-                        // if (p == state.human)
-                        // sound.playPlayerWin();
-                        // System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
-                    }
-                    case PUSH -> {
-                        p.pushBet();
-                        // sound.playDealerWin();
-                        // System.out.println(p.getName() + " pushes. New balance: " + p.getMoney());
-                    }
-                    case LOSE -> {
-                        p.loseBet();
-                        // if (p == state.human)
-                        // sound.playDealerWin();
-                        // System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
-                    }
+            // Resume the correct turn
+            if (state.phase == GameState.Phase.DEAL) {
+                if (state.turnIndex == 0) {
+                    notifyChange("Your turn resumed.");
+                } else {
+                    runAutoTurnsIfNeeded();
                 }
             }
 
-            // Clear all bets after settlement
-            for (Player p : state.turnOrder()) {
-                p.clearBet();
-            }
-
-            if (listener != null) {
-                listener.onRoundEnded(state, null);
-                // listener.onStateChanged(state, "Round updated.");
-            }
-        });
-
-        pause.play();
-    }
-
-    public void startNextRound() {
-        state.resetRound();
-        if (listener != null) {
-            listener.onStateChanged(state, "Started new round. Place your bet!");
+            return true;
+        } catch (Exception ex) {
+            notifyChange("Load failed: " + ex.getMessage());
+            return false;
         }
     }
 
-    // Save / Load
+    // Helpers
 
-    public String save() {
-        return GameSaveHandler.save(state);
+    private void notifyChange(String msg) {
+        if (listener != null)
+            listener.onStateChanged(state, msg);
+        // If it’s bots/dealer turn, keep auto play
+        if (state.phase == GameState.Phase.DEAL && state.turnIndex > 0) {
+            runAutoTurnsIfNeeded();
+        }
     }
 
-    public boolean load(String save) {
-        try {
-            GameState loaded = GameSaveHandler.load(save);
-            this.state = loaded;
+}
 
-            boolean cardsDealt = !state.human.getHand().getCards().isEmpty() ||
-                    !state.bot1.getHand().getCards().isEmpty() ||
-                    !state.bot2.getHand().getCards().isEmpty() ||
-                    !state.dealer.getHand().getCards().isEmpty();
-
+Changed text
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
             if (cardsDealt && state.phase == GameState.Phase.BETTING) {
                 state.phase = GameState.Phase.DEAL;
             }
@@ -354,3 +379,13 @@ public class BlackJackGame {
     }
 
 }
+
+Web Awesome icon
+Make Something Awesome Build faster with Web Awesome — open-source web components for modern developers.
+Squarespace icon
+Grow your client list with Squarespace With Squarespace, you can book projects, send documents, and get paid—all in one place.
+
+    © 2025 Checker Software Inc.ContactCLITermsPrivacy PolicyAPIiManageCompare Text
+
+    EnglishFrançaisEspañolPortuguêsItalianoDeutschहिन्दी简体繁體日本語
+
