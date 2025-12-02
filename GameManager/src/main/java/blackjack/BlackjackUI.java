@@ -57,6 +57,10 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
         this.gameManager = manager;
         this.CurUser = manager.getCurrentUser();
         int savedMoney = gameManager.getHighScoreManager().getBlackjackScore(CurUser.getUserName());
+        if (savedMoney <= 0) {
+            savedMoney = 1000;
+        }
+
         this.game = new BlackJackGame(CurUser.getUserName(), savedMoney);
 
         this.game.setListener(this);
@@ -99,7 +103,12 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
         turnLabel.setFont(Font.font(16));
         msgLabel.setFont(Font.font(14));
 
-        // Player rows
+        msgLabel.setMinHeight(30);
+
+        // Center the top labels in a VBox
+        VBox topLabels = new VBox(5, phaseLabel, turnLabel, msgLabel);
+        topLabels.setAlignment(Pos.CENTER);
+
         VBox rows = new VBox(10);
         rows.getChildren().addAll(
                 playerRow(CurUser.getUserName(), humanMoney, humanBet, humanCards),
@@ -107,17 +116,23 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
                 playerRow("Bot 2", bot2Money, bot2Bet, bot2Cards),
                 playerRow("Dealer", dealerMoney, dealerBet, dealerCards));
 
-        // Controls
         HBox actionBox = new HBox(10, hitBtn, standBtn);
         actionBox.setAlignment(Pos.CENTER);
 
         HBox betBox = new HBox(8, new Label("Bet:"), bet1, bet5, bet25, bet50, betClear, betDeal);
         betBox.setAlignment(Pos.CENTER);
 
-        HBox saveLoad = new HBox(10, saveBtn, loadBtn, nextRoundBtn);
+        HBox saveLoad = new HBox(15, saveBtn, loadBtn, nextRoundBtn);
         saveLoad.setAlignment(Pos.CENTER);
+        saveLoad.setPadding(new Insets(10));
 
-        // actions
+        saveLoad.setMaxWidth(Double.MAX_VALUE);
+        saveLoad.setPrefWidth(600);
+
+        HBox.setHgrow(saveBtn, Priority.NEVER);
+        HBox.setHgrow(loadBtn, Priority.NEVER);
+        HBox.setHgrow(nextRoundBtn, Priority.NEVER);
+
         hitBtn.setOnAction(e -> game.humanHit());
         standBtn.setOnAction(e -> game.humanStand());
 
@@ -142,12 +157,17 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
             game.newGame(CurUser.getUserName(), savedMoney);
         });
 
-        tablePane.getChildren().addAll(
-                phaseLabel, turnLabel, msgLabel,
-                rows,
-                actionBox,
-                betBox,
-                saveLoad);
+        // Add the top labels at the top of the content VBox
+        VBox content = new VBox(10, topLabels, rows, actionBox, betBox, saveLoad);
+
+        ScrollPane scrollPane = new ScrollPane(content);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        scrollPane.setStyle("-fx-background-color: #098109e7; -fx-border-color: #098109e7;");
+        content.setStyle("-fx-background-color: #098109e7; -fx-border-color: #098109e7;");
+
+        tablePane.getChildren().add(scrollPane);
 
         refresh(game.getState(), "Ready.");
     }
@@ -204,76 +224,39 @@ public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
 
     @Override
     public void onRoundEnded(GameState state, String message) {
-        // to decide Outcome of the rounds
-        GameLogic.Outcome humanOutcome = GameLogic.compare(state.human, state.dealer);
-        GameLogic.Outcome bot1Outcome = GameLogic.compare(state.bot1, state.dealer);
-        GameLogic.Outcome bot2Outcome = GameLogic.compare(state.bot2, state.dealer);
-
-        int humanBet = state.human.getBet();
-        int bot1Bet = state.bot1.getBet();
-        int bot2Bet = state.bot2.getBet();
-
-        // Calculate winnings/losses based on outcome
-        int humanChange = switch (humanOutcome) {
-            case WIN -> humanBet;
-            case LOSE -> -humanBet;
-            case PUSH -> 0;
-        };
-
-        int bot1Change = switch (bot1Outcome) {
-            case WIN -> bot1Bet;
-            case LOSE -> -bot1Bet;
-            case PUSH -> 0;
-        };
-
-        int bot2Change = switch (bot2Outcome) {
-            case WIN -> bot2Bet;
-            case LOSE -> -bot2Bet;
-            case PUSH -> 0;
-        };
-
-        StringBuilder result = new StringBuilder("Round Results: ");
-
-        // Human
-        switch (humanOutcome) {
-            case WIN -> result.append(CurUser.getUserName())
-                    .append(" won $").append(Math.abs(humanChange / 2))
-                    .append(" | ");
-            case LOSE -> result.append(CurUser.getUserName())
-                    .append(" lost $").append(Math.abs(humanBet)).append(" | ");
-            case PUSH -> result.append(CurUser.getUserName())
-                    .append(" pushed | ");
-        }
-
-        // Bot 1
-        switch (bot1Outcome) {
-            case WIN -> result.append("Bot 1 won $").append(Math.abs(bot1Change)).append(" | ");
-            case LOSE -> result.append("Bot 1 lost $").append(Math.abs(bot1Change)).append(" | ");
-            case PUSH -> result.append("Bot 1 pushed | ");
-        }
-
-        // Bot 2
-        switch (bot2Outcome) {
-            case WIN -> result.append("Bot 2 won $").append(Math.abs(bot2Change));
-            case LOSE -> result.append("Bot 2 lost $").append(Math.abs(bot2Change));
-            case PUSH -> result.append("Bot 2 pushed");
-        }
-
-        msgLabel.setText(result.toString());
+        // Display the message from the game logic
+        msgLabel.setText(message);
         msgLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: Red;");
         msgLabel.setFont(Font.font(24));
 
-        state.message = result.toString();
-
-        // Update UI money values
+        // Update money labels
         humanMoney.setText("$" + state.human.getMoney());
         bot1Money.setText("$" + state.bot1.getMoney());
         bot2Money.setText("$" + state.bot2.getMoney());
+        dealerMoney.setText("$0"); // dealer money is always 0
 
-        refresh(game.getState(), result.toString());
-        int currentMoney = state.human.getMoney();
-        gameManager.getHighScoreManager()
-                .updateScore(CurUser.getUserName(), currentMoney, null);
+        // Update bet labels
+        humanBet.setText("$" + state.human.getBet());
+        bot1Bet.setText("$" + state.bot1.getBet());
+        bot2Bet.setText("$" + state.bot2.getBet());
+        dealerBet.setText("$" + state.dealer.getBet());
+
+        // Refresh cards
+        fillCards(humanCards, state.human.getHand(), true);
+        fillCards(bot1Cards, state.bot1.getHand(), true);
+        fillCards(bot2Cards, state.bot2.getHand(), true);
+        fillDealerCards(dealerCards, state.dealer.getHand(), state.revealDealerHole);
+
+        // Update turn/phase labels
+        phaseLabel.setText("Phase: " + state.phase);
+        String whoseTurn = switch (state.turnIndex) {
+            case 0 -> CurUser.getUserName();
+            case 1 -> "Bot 1";
+            case 2 -> "Bot 2";
+            case 3 -> "Dealer";
+            default -> "?";
+        };
+        turnLabel.setText("Turn: " + whoseTurn);
     }
 
     // Rendering

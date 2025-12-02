@@ -15,7 +15,7 @@ public class BlackJackGame {
 
     public BlackJackGame(String username, int startingMoney) {
         state = new GameState(username, startingMoney);
-        // state.human = new Player(username, startingMoney);
+        state.human = new Player(username, startingMoney);
         state.bot1 = new Bot("Bot 1", 1000, 16);
         state.bot2 = new Bot("Bot 2", 1000, 14);
         state.dealer = new Dealer();
@@ -210,37 +210,82 @@ public class BlackJackGame {
 
         javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(
                 javafx.util.Duration.seconds(0.8));
+
         pause.setOnFinished(e -> {
             Player dealer = state.dealer;
 
-            // Determine outcome for each player
-            for (Player p : new Player[] { state.human, state.bot1, state.bot2 }) {
-                GameLogic.Outcome out = GameLogic.compare(p, dealer);
+            // Record bets BEFORE they are modified
+            int humanBetBefore = state.human.getBet();
+            int bot1BetBefore = state.bot1.getBet();
+            int bot2BetBefore = state.bot2.getBet();
 
-                switch (out) {
-                    case WIN -> {
-                        p.winBet();
-                        // System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
-                    }
-                    case PUSH -> {
-                        p.pushBet();
-                        // System.out.println(p.getName() + " pushes. New balance: " + p.getMoney());
-                    }
-                    case LOSE -> {
-                        p.loseBet();
-                        // System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
-                    }
+            String humanMsg;
+            String bot1Msg;
+            String bot2Msg;
+
+            // Human
+            GameLogic.Outcome outH = GameLogic.compare(state.human, dealer);
+            switch (outH) {
+                case WIN -> {
+                    state.human.winBet();
+                    humanMsg = state.human.getName() + " won $" + humanBetBefore;
                 }
+                case PUSH -> {
+                    state.human.pushBet();
+                    humanMsg = state.human.getName() + " pushed";
+                }
+                case LOSE -> {
+                    state.human.loseBet();
+                    humanMsg = state.human.getName() + " lost $" + humanBetBefore;
+                }
+                default -> humanMsg = "";
             }
 
-            // Clear all bets after settlement
-            for (Player p : state.turnOrder()) {
-                p.clearBet();
+            // Bot 1
+            GameLogic.Outcome out1 = GameLogic.compare(state.bot1, dealer);
+            switch (out1) {
+                case WIN -> {
+                    state.bot1.winBet();
+                    bot1Msg = state.bot1.getName() + " won $" + bot1BetBefore;
+                }
+                case PUSH -> {
+                    state.bot1.pushBet();
+                    bot1Msg = state.bot1.getName() + " pushed";
+                }
+                case LOSE -> {
+                    state.bot1.loseBet();
+                    bot1Msg = state.bot1.getName() + " lost $" + bot1BetBefore;
+                }
+                default -> bot1Msg = "";
             }
+
+            // Bot 2
+            GameLogic.Outcome out2 = GameLogic.compare(state.bot2, dealer);
+            switch (out2) {
+                case WIN -> {
+                    state.bot2.winBet();
+                    bot2Msg = state.bot2.getName() + " won $" + bot2BetBefore;
+                }
+                case PUSH -> {
+                    state.bot2.pushBet();
+                    bot2Msg = state.bot2.getName() + " pushed";
+                }
+                case LOSE -> {
+                    state.bot2.loseBet();
+                    bot2Msg = state.bot2.getName() + " lost $" + bot2BetBefore;
+                }
+                default -> bot2Msg = "";
+            }
+
+            // Build message to send to UI
+            String results = "Round Results — " + humanMsg + " | " + bot1Msg + " | " + bot2Msg;
+
+            state.message = results;
+
+            // DO NOT clear bets here — win/push/lose already zeroes them
 
             if (listener != null) {
-                listener.onRoundEnded(state, null);
-                // listener.onStateChanged(state, "Round updated.");
+                listener.onRoundEnded(state, results);
             }
         });
 
