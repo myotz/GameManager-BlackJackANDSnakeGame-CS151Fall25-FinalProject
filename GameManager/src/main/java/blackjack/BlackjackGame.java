@@ -2,7 +2,7 @@ package blackjack;
 
 import blackjack.model.*;
 
-public class BlackJackGame {
+public class BlackjackGame {
 
     public interface Listener {
         void onStateChanged(GameState state, String message);
@@ -20,7 +20,7 @@ public class BlackJackGame {
     private int startBot2Money;
     private int lastHumanBet;
 
-    public BlackJackGame(String username, int startingMoney) {
+    public BlackjackGame(String username, int startingMoney) {
         state = new GameState(username, startingMoney);
         // state.human = new Player(username, startingMoney);
         state.bot1 = new Bot("Bot 1", 1000, 16);
