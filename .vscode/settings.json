@@ -1,19 +1,8 @@
 {
-    "java.project.sourcePaths": [
-        "GameManager/src"
-    ],
+    "java.project.sourcePaths": ["GameManager"],
+    "java.project.outputPath": "out",
     "java.project.referencedLibraries": [
-        "GameManager/lib/javafx-swt.jar",
-        "GameManager/lib/javafx.base.jar",
-        "GameManager/lib/javafx.controls.jar",
-        "GameManager/lib/javafx.fxml.jar",
-        "GameManager/lib/javafx.graphics.jar",
-        "GameManager/lib/javafx.media.jar",
-        "GameManager/lib/javafx.swing.jar",
-        "GameManager/lib/javafx.web.jar",
-        "GameManager/lib/jdk.jsobject.jar",
-        "GameManager/lib/jfx.incubator.input.jar",
-        "GameManager/lib/jfx.incubator.richtext.jar"
+        "lib/**/*.jar"
     ],
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.debug.settings.vmArgs": "--module-path /Library/Java/JavaFX/javafx-sdk-25.0.1/lib --add-modules javafx.controls,javafx.fxml"
 }
