@@ -11,9 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
-public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
+public class BlackjackUI extends BorderPane implements BlackJackGame.Listener {
     private final User CurUser;
-    private final BlackjackGame game;
+    private final BlackJackGame game;
     private final GameManager gameManager;
     private final SoundManager sound;
 
@@ -59,7 +59,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         this.gameManager = manager;
         this.CurUser = manager.getCurrentUser();
         int savedMoney = gameManager.getHighScoreManager().getBlackjackScore(CurUser.getUserName());
-        this.game = new BlackjackGame(CurUser.getUserName(), savedMoney);
+        this.game = new BlackJackGame(CurUser.getUserName(), savedMoney);
 
         this.game.setListener(this);
 
@@ -275,8 +275,6 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
                 sound.playDealerWin();
             }
         }
-
-       
 
         // Bot 1
         switch (bot1Outcome) {

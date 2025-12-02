@@ -1,7 +1,6 @@
 package blackjack;
 
 import blackjack.model.*;
-import manager.GameManager;
 
 public class BlackJackGame {
 
