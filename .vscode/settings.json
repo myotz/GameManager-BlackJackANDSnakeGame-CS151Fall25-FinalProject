@@ -14,5 +14,6 @@
         "GameManager/lib/jdk.jsobject.jar",
         "GameManager/lib/jfx.incubator.input.jar",
         "GameManager/lib/jfx.incubator.richtext.jar"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
 }
