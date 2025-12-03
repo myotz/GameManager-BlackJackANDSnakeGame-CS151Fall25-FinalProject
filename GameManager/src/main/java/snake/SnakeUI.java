@@ -60,7 +60,9 @@ public class SnakeUI extends BorderPane {
     private Image tailDownImage;
     private Image tailLeftImage;
     private Image tailRightImage;
-    private Image foodImage;
+    private Image appleImage;
+    private Image pearImage;  
+    private Image bananaPeelImage;
 
     public SnakeUI(GameManager gameManager) {
         // Initialize core objects
@@ -90,7 +92,10 @@ public class SnakeUI extends BorderPane {
             tailDownImage = new Image(getClass().getResource("/assets/tail_down.png").toExternalForm());
             tailLeftImage = new Image(getClass().getResource("/assets/tail_left.png").toExternalForm());
             tailRightImage = new Image(getClass().getResource("/assets/tail_right.png").toExternalForm());
-            foodImage = new Image(getClass().getResource("/assets/apple.png").toExternalForm());
+
+            appleImage = new Image(getClass().getResource("/assets/apple.png").toExternalForm());
+            pearImage = new Image(getClass().getResource("/assets/pear.png").toExternalForm());         // Pear
+            bananaPeelImage = new Image(getClass().getResource("/assets/bananapeel.png").toExternalForm());
         } catch (Exception e) {
             System.out.println("Could not load background image: " + e.getMessage());
         }
@@ -192,19 +197,21 @@ public class SnakeUI extends BorderPane {
             gc.strokeLine(0, y * cellSize, gridWidth * cellSize, y * cellSize);
         }
 
-        // gc.setFill(Color.RED);
-
-        // apple
+        //food
         Point2D food = game.getFood().getPosition();
-        if (foodImage != null) {
-            double appleSize = cellSize + 10;
-            double offset = (appleSize - cellSize) / 2;
+        Image foodToDraw = switch (game.getFood().getType()) {
+            case APPLE -> appleImage; // USES NEW FIELD NAME
+            case PEAR -> pearImage;
+            case BANANAPEEL -> bananaPeelImage;
+        };
+        
+        if (foodToDraw != null) {
+            double foodSize = cellSize + 10;
+            double offset = (foodSize - cellSize) / 2;
 
-            gc.drawImage(foodImage,
-                    food.getX() * cellSize - offset,
-                    food.getY() * cellSize - offset,
-                    appleSize, appleSize);
-        } else { // if drawing fails
+            gc.drawImage(foodToDraw,
+                    food.getX() * cellSize - offset, food.getY() * cellSize - offset, foodSize, foodSize);
+        } else { 
             gc.setFill(Color.RED);
             gc.fillOval(food.getX() * cellSize, food.getY() * cellSize, cellSize, cellSize);
         }
@@ -381,15 +388,14 @@ public class SnakeUI extends BorderPane {
     }
 
     // Increase speed every time score hits a multiple of 1000
-    private void adjustSpeed() {
-        if (game.getScore() % 1000 == 0) {
-            double currentSpeed = timeline.getRate();
-            double newSpeed = Math.min(currentSpeed + 0.5, 3.0); // don't go below 50ms
-            System.out.println("Speed increased! New frame time: " + newSpeed + " ms");
-            timeline.setRate(newSpeed);
+    private void increaseSpeed() {
+        double currentSpeed = timeline.getRate();
+        double newSpeed = Math.min(currentSpeed + 0.2, 2.0); // don't go below 50ms
+        System.out.println("Speed increased! New frame time: " + newSpeed + " ms");
+        timeline.setRate(newSpeed);
 
         }
-    }
+    
 
     private void gameLoop() {
         if (pendingDirection != null) {
@@ -403,7 +409,13 @@ public class SnakeUI extends BorderPane {
 
         if (game.getScore() > prevScore) {
             audio.playEat();
-            adjustSpeed();
+            increaseSpeed();
+        }
+
+        if (game.wasBananaEaten()) { 
+            audio.playCrash(); 
+            decreaseSpeed();
+
         }
 
         if (game.isGameOver()) {
@@ -412,6 +424,12 @@ public class SnakeUI extends BorderPane {
             timeline.stop();
             highScoreManager.updateScore(currentUser.getUserName(), null, game.getScore());
         }
+    }
+
+    private void decreaseSpeed() {
+        double currentSpeed = timeline.getRate();
+        double newSpeed = Math.max(currentSpeed - 0.5, 0.5); 
+        timeline.setRate(newSpeed);
     }
 
     private String getGameState() {

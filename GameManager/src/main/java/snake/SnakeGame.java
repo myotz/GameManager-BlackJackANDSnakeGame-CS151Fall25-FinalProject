@@ -9,12 +9,14 @@ public class SnakeGame {
     private final Food food;
     private int score;
     private boolean gameOver;
+    private boolean bananaEaten;
 
     public SnakeGame(int width, int height) {
         this.width = width;
         this.height = height;
         this.snake = new Snake(new Point2D(width / 2, height / 2));
         this.food = new Food(width, height);
+        food.spawn(width, height, snake);
     }
 
     public Snake getSnake() {
@@ -23,6 +25,10 @@ public class SnakeGame {
 
     public Food getFood() {
         return food;
+    }
+
+    public boolean wasBananaEaten() { 
+        return bananaEaten;
     }
 
     public int getScore() {
@@ -36,14 +42,16 @@ public class SnakeGame {
     public void resetGame() {
         snake.getBody().clear();
         snake.getBody().add(new Point2D(width / 2, height / 2)); // start in center
-        food.spawn(width, height);
+        food.spawn(width, height, snake);
         score = 0;
         gameOver = false;
+        bananaEaten = false;
     }
 
     public void update() {
         if (gameOver)
             return;
+        bananaEaten = false;
 
         Point2D head = snake.getHead();
         Point2D newHead = switch (snake.getDirection()) {
@@ -68,11 +76,21 @@ public class SnakeGame {
 
         // food or move
         if (newHead.equals(food.getPosition())) {
+            FoodType consumedType = food.getType(); 
+            score += consumedType.getScoreValue(); 
             snake.grow(newHead);
-            food.spawn(width, height);
-            score += 200;
+        
+            if (consumedType == FoodType.BANANAPEEL) {
+                bananaEaten = true; 
+            }
+            
+            if (score < 0) 
+                score = 0; 
+            
+            food.spawn(width, height, snake);
         } else {
             snake.move(newHead);
         }
+    
     }
 }
