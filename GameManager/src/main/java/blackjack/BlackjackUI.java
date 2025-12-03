@@ -21,7 +21,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
     private final VBox menuPane = new VBox(12);
 
     // Table nodes
-    private final VBox tablePane = new VBox(10);
+    private final VBox tablePane = new VBox(6);
     private final Label phaseLabel = new Label();
     private final Label turnLabel = new Label();
     private final Label msgLabel = new Label();
@@ -36,10 +36,10 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
     private final Label bot2Bet = new Label();
     private final Label dealerBet = new Label();
 
-    private final HBox humanCards = new HBox(6);
-    private final HBox bot1Cards = new HBox(6);
-    private final HBox bot2Cards = new HBox(6);
-    private final HBox dealerCards = new HBox(6);
+    private final HBox humanCards = new HBox(4);
+    private final HBox bot1Cards = new HBox(4);
+    private final HBox bot2Cards = new HBox(4);
+    private final HBox dealerCards = new HBox(4);
 
     private final Button hitBtn = new Button("Hit");
     private final Button standBtn = new Button("Stand");
@@ -69,7 +69,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
 
         sound.playBackground();
 
-        setPadding(new Insets(10));
+        setPadding(new Insets(6));
 
         buildMenuPane();
         buildTablePane();
@@ -108,34 +108,30 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
     }
 
     private void buildTablePane() {
-        tablePane.setPadding(new Insets(10));
+        tablePane.setPadding(new Insets(6));
         tablePane.setAlignment(Pos.TOP_CENTER);
 
-        phaseLabel.setFont(Font.font(18));
+        phaseLabel.setFont(Font.font(16));
         phaseLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-        turnLabel.setFont(Font.font(18));
+        turnLabel.setFont(Font.font(16));
         turnLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-        msgLabel.setFont(Font.font(18));
-        msgLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+        msgLabel.setFont(Font.font(19));
+        msgLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
 
         // Player rows
-        VBox rows = new VBox(10);
+        VBox rows = new VBox(4);
         rows.getChildren().addAll(
                 playerRow(CurUser.getUserName(), humanMoney, humanBet, humanCards),
                 playerRow("Bot 1", bot1Money, bot1Bet, bot1Cards),
                 playerRow("Bot 2", bot2Money, bot2Bet, bot2Cards),
                 playerRow("Dealer", dealerMoney, dealerBet, dealerCards));
 
-        // Controls
-        HBox actionBox = new HBox(10, hitBtn, standBtn);
-        actionBox.setAlignment(Pos.CENTER);
-
-        HBox betBox = new HBox(8, new Label("Bet:"), bet1, bet5, bet25, bet50, betClear, betDeal);
+        HBox betBox = new HBox(6, bet1, bet5, bet25, bet50, betClear, betDeal, hitBtn, standBtn);
         betBox.setAlignment(Pos.CENTER);
 
-        HBox saveLoad = new HBox(10, saveBtn, loadBtn, nextRoundBtn);
+        HBox saveLoad = new HBox(8, saveBtn, loadBtn, nextRoundBtn);
         saveLoad.setAlignment(Pos.CENTER);
 
         // actions
@@ -174,7 +170,6 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
         tablePane.getChildren().addAll(
                 phaseLabel, turnLabel, msgLabel,
                 rows,
-                actionBox,
                 betBox,
                 saveLoad);
 
@@ -190,8 +185,7 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
                 new HBox(10, name, new Label("Money:"), moneyLbl, new Label("Bet:"), betLbl),
                 new HBox(10, new Label("Cards:"), cardsBox));
         box.setPadding(new Insets(6));
-        box.setStyle(
-                "-fx-border-color: #931212ff; -fx-border-radius: 6; -fx-padding: 6; -fx-background-color: #b285ede9;");
+        box.setStyle("-fx-border-radius: 6; -fx-padding: 6; -fx-background-color: #b285ede9;");
         return box;
     }
 
@@ -290,10 +284,6 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
             case PUSH -> result.append("Bot 2 pushed");
         }
 
-        msgLabel.setText(result.toString());
-        msgLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: Red;");
-        msgLabel.setFont(Font.font(24));
-
         state.message = result.toString();
 
         // Update UI money values
@@ -309,6 +299,9 @@ public class BlackjackUI extends BorderPane implements BlackjackGame.Listener {
 
     // Rendering
     private void refresh(GameState gs, String msg) {
+        msgLabel.setFont(Font.font(19));
+        msgLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+
         phaseLabel.setText("Phase: " + gs.phase);
         String whose = switch (gs.turnIndex) {
             case 0 -> CurUser.getUserName();
