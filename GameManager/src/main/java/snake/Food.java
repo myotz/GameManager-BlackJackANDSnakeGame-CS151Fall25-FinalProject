@@ -1,10 +1,7 @@
 package snake;
 
 import javafx.geometry.Point2D;
-
-import java.util.List;
 import java.util.Random;
-import java.util.List;
 
 public class Food {
     private Point2D position;
