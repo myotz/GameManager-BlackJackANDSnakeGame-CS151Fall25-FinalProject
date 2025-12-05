@@ -51,7 +51,7 @@ The system allows players to log in / create accounts, track high scores, and sa
 
 ## Team Contributions
 - Myo Thant Zin:
-    - Developed Game Manager system, including login, account creation, encrypted user data, high score persistence, main menu, and scene transitions.
+    - Developed Game Manager system, including login, account creation, resetting of password encrypted user data, high score persistence, main menu, and scene                transitions.
     - Implemented audio management system, including background music, sound effects, fixing overlapping audio, and global toolbar volume slider integration.
     - Built or refined large portions of the Blackjack UI, Snake UI, and overall application visual consistency.
     - Added save/load system for Blackjack through GameSaveHandler and later improvements.
@@ -65,8 +65,10 @@ The system allows players to log in / create accounts, track high scores, and sa
     - Implemented Snake audio system, including sound effects and background music.
     - Moved Snake volume controls into the global toolbar so audio settings apply across the entire application.
     - Added multiple Snake-focused fixes such as pause message cleanup, sound configuration logic, and visual polishing.
-
+    - Majorly contributed by designing and implementing a visually rich Snake game UI, including realistic snake body and movement graphics that made the gameplay feel        more lively and engaging.
+      
 - Chan Li:
+    - Main contributor of blackjack backend and carried out a lot of debugging and fixed a lot of logic errors with backend logic.
     - Implemented core Blackjack data model classes, including Hand, Deck, Player, Dealer, Suit, Rank, and the early structure of the Blackjack engine.
     - Designed and implemented the Blackjack GameState, which tracks players, dealer, deck, round data, and game phases.
     - Added and integrated placeBet() logic inside the controller, including validation, AI bet logic, and phase transitions.
@@ -79,7 +81,7 @@ The system allows players to log in / create accounts, track high scores, and sa
     - Performed major restructuring to clean and prepare files for testing, simplifying long-term maintenance.
     - Contributed early Blackjack structure and foundational classes during initial project phase.
     - Helped resolve multiple merge conflicts and reorganization-related issues.
-
+    - Majorly contributed to blackjack UI and debugging of blackjack logic.
 
 ## Installation
 
