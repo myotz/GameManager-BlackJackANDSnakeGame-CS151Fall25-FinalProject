@@ -79,6 +79,7 @@ public class CreateAccountMenu {
                 messageLabel.setText("Account created for " + profile + "! You can now log in.");
                 window.close();
             } else {
+                text.setText("Username already exists.");
                 messageLabel.setText("Username already exists.");
             }
         });
