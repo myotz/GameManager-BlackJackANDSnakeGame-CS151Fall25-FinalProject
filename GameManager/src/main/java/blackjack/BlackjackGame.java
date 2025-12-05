@@ -13,8 +13,8 @@ public class BlackjackGame {
 
     private GameState state;
     private Listener listener;
-    //private final SoundManager sound;
-    //private final GameManager manager;
+    // private final SoundManager sound;
+    // private final GameManager manager;
 
     private int startHumanMoney;
     private int startBot1Money;
@@ -27,9 +27,9 @@ public class BlackjackGame {
         state.bot1 = new Bot("Bot 1", 1000, 16);
         state.bot2 = new Bot("Bot 2", 1000, 14);
         state.dealer = new Dealer();
-        //sound = new SoundManager(manager.getMusicVolume(), manager.getSfxVolume());
+        // sound = new SoundManager(manager.getMusicVolume(), manager.getSfxVolume());
 
-        //sound.playBackground();
+        // sound.playBackground();
     }
 
     public void setListener(Listener listener) {
@@ -64,8 +64,8 @@ public class BlackjackGame {
         state.turnIndex = 0;
         state.revealDealerHole = false;
         state.message = "Started new round. Place your bet!";
-        //sound.stopBackground();
-        //sound.playBackground();
+        // sound.stopBackground();
+        // sound.playBackground();
         notifyChange(state.message);
     }
 
@@ -73,7 +73,7 @@ public class BlackjackGame {
         if (state.phase != GameState.Phase.BETTING)
             return;
 
-        //sound.playDrawCard();
+        // sound.playDrawCard();
         // Save starting money for this round
         startHumanMoney = state.human.getMoney();
         startBot1Money = state.bot1.getMoney();
@@ -143,7 +143,7 @@ public class BlackjackGame {
             return;
 
         state.human.add(state.deck.dealCard());
-        //sound.playDrawCard();
+        // sound.playDrawCard();
 
         if (state.human.isBust()) {
             state.message = "Human busts!";
@@ -195,7 +195,7 @@ public class BlackjackGame {
         // Bot.hit()
         if (!bot.isBust() && bot.hit()) {
             bot.add(state.deck.dealCard());
-            //sound.playDrawCard();
+            // sound.playDrawCard();
             state.message = bot.getName() + " hits.";
             if (bot.isBust()) {
                 state.message = bot.getName() + " busts!";
@@ -219,7 +219,7 @@ public class BlackjackGame {
         Dealer d = state.dealer;
         if (!d.isBust() && d.shouldHit()) {
             d.add(state.deck.dealCard());
-            //sound.playDrawCard();
+            // sound.playDrawCard();
             state.message = "Dealer hits.";
             if (d.isBust()) {
                 state.message = "Dealer busts!";
@@ -262,19 +262,19 @@ public class BlackjackGame {
                 switch (out) {
                     case WIN -> {
                         p.winBet();
-                        //if (p == state.human)
-                            //sound.playPlayerWin();
+                        // if (p == state.human)
+                        // sound.playPlayerWin();
                         // System.out.println(p.getName() + " wins. New balance: " + p.getMoney());
                     }
                     case PUSH -> {
                         p.pushBet();
-                        //sound.playDealerWin();
+                        // sound.playDealerWin();
                         // System.out.println(p.getName() + " pushes. New balance: " + p.getMoney());
                     }
                     case LOSE -> {
                         p.loseBet();
-                        //if (p == state.human)
-                            //sound.playDealerWin();
+                        // if (p == state.human)
+                        // sound.playDealerWin();
                         // System.out.println(p.getName() + " loses. New balance: " + p.getMoney());
                     }
                 }
@@ -312,6 +312,12 @@ public class BlackjackGame {
             GameState loaded = GameSaveHandler.load(save);
             this.state = loaded;
 
+            //Restore starting balances for correct win/loss calculation
+            startHumanMoney = state.human.getMoney();
+            startBot1Money = state.bot1.getMoney();
+            startBot2Money = state.bot2.getMoney();
+            lastHumanBet = state.human.getBet();
+
             boolean cardsDealt = !state.human.getHand().getCards().isEmpty() ||
                     !state.bot1.getHand().getCards().isEmpty() ||
                     !state.bot2.getHand().getCards().isEmpty() ||
@@ -322,9 +328,9 @@ public class BlackjackGame {
             }
 
             notifyChange("Game loaded.");
-            //if (sound != null) {
-                //sound.playBackground();
-            //}
+            // if (sound != null) {
+            // sound.playBackground();
+            // }
 
             // Resume the correct turn
             if (state.phase == GameState.Phase.DEAL) {
