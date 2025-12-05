@@ -390,7 +390,7 @@ public class SnakeUI extends BorderPane {
 
     // Increase speed every time score hits a multiple of 1000
     private void adjustSpeed() {
-        if (game.getScore() > nextSpeedThreshold) {
+        if (game.getScore() >= nextSpeedThreshold) {
             double currentSpeed = timeline.getRate();
             double newSpeed = Math.min(currentSpeed + 0.5, 3.0); // don't go below 50ms
             System.out.println("Speed increased! New frame time: " + newSpeed + " ms");
@@ -412,10 +412,6 @@ public class SnakeUI extends BorderPane {
         if (game.getScore() > prevScore) {
             audio.playEat();
             adjustSpeed();
-        }
-
-        if (game.wasBananaEaten()) {
-            audio.playEat();
         }
 
         if (game.isGameOver()) {
