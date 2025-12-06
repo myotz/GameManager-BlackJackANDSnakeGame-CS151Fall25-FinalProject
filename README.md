@@ -95,3 +95,5 @@ The system allows players to log in / create accounts, track high scores, and sa
 git clone https://github.com/myotz/GameManager-BlackJackANDSnakeGame-CS151Fall25-FinalProject.git
 ```
 
+Link to video: https://www.youtube.com/watch?v=AUS5VKZ1qrQ
+
